@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Create Admin User</title>
+  <link rel="stylesheet" href="/static/css/admin.css" />
+  <style>
+    .login-wrap{max-width:360px;margin:60px auto;background:var(--panel);padding:24px;border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.25)}
+    h1{margin:0 0 14px;font-size:24px;font-weight:800;text-align:center}
+    .error{color:#ff7b7b;font-size:12px;min-height:16px;margin-top:6px;text-align:center}
+    button{width:100%;margin-top:12px}
+  </style>
+  <script>
+    async function onSubmit(e){
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const err = document.getElementById('regErr');
+      err.textContent='';
+      try{
+        const res = await fetch('/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+        if(!res.ok){ err.textContent = (await res.text())||'Failed'; return; }
+        location.href='/login';
+      }catch(ex){ err.textContent='Failed'; }
+    }
+  </script>
+  </head>
+<body>
+  <div class="login-wrap">
+    <h1>Register Admin</h1>
+    <form onsubmit="onSubmit(event)">
+      <label>Username
+        <input id="username" autocomplete="username" required />
+      </label>
+      <label>Password
+        <input id="password" type="password" autocomplete="new-password" required />
+      </label>
+      <div class="error" id="regErr"></div>
+      <button type="submit">Create Account</button>
+      <div style="margin-top:8px;text-align:center"><a href="/login">Back to login</a></div>
+    </form>
+  </div>
+</body>
+</html>

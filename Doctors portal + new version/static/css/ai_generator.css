@@ -1,0 +1,679 @@
+/* ============================================================================
+   AI GENERATOR MODAL & PR BOT STYLES
+   Modern, futuristic styling for AI-powered roster generation
+   ============================================================================ */
+
+/* AI Generation Modal */
+.ai-gen-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.ai-gen-container {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 24px;
+    width: 90%;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.4s ease forwards;
+}
+
+.ai-gen-header {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.ai-gen-header h2 {
+    color: white;
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ai-gen-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.ai-gen-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.ai-gen-body {
+    padding: 32px;
+    overflow-y: auto;
+    max-height: calc(90vh - 200px);
+}
+
+/* Generation Mode Tabs */
+.gen-mode-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.gen-mode-tab {
+    flex: 1;
+    min-width: 200px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.gen-mode-tab:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(99, 102, 241, 0.5);
+}
+
+.gen-mode-tab.active {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+    border-color: #6366f1;
+    color: white;
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+}
+
+.gen-mode-tab h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+}
+
+.gen-mode-tab p {
+    font-size: 13px;
+    margin: 0;
+    opacity: 0.8;
+}
+
+/* Generation Options */
+.gen-options {
+    display: none;
+}
+
+.gen-options.active {
+    display: block;
+    animation: fadeInUp 0.4s ease;
+}
+
+.gen-option-group {
+    margin-bottom: 24px;
+}
+
+.gen-option-label {
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.gen-date-range {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.gen-date-input {
+    flex: 1;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.gen-date-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Staff Selection */
+.staff-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+}
+
+.staff-select-item {
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.staff-select-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.staff-select-item.selected {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+    border-color: #10b981;
+    color: white;
+}
+
+.staff-select-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* Pattern Options */
+.pattern-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+}
+
+.pattern-card {
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.pattern-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(99, 102, 241, 0.5);
+}
+
+.pattern-card.selected {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+    border-color: #6366f1;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.pattern-card h4 {
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+}
+
+.pattern-card p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    margin: 0;
+}
+
+/* Loading Animation */
+.ai-loading {
+    text-align: center;
+    padding: 48px 32px;
+}
+
+.ai-loading-spinner {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+    border: 4px solid rgba(99, 102, 241, 0.2);
+    border-top: 4px solid #6366f1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.ai-loading-text {
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.ai-loading-subtext {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+}
+
+.ai-loading-progress {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    margin-top: 24px;
+    overflow: hidden;
+}
+
+.ai-loading-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+    border-radius: 4px;
+    width: 0%;
+    animation: progressBar 3s ease-in-out infinite;
+}
+
+/* Results Overview */
+.ai-results {
+    padding: 32px;
+}
+
+.ai-results-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.ai-results-header h3 {
+    color: white;
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 0 8px 0;
+}
+
+.ai-results-header p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    margin: 0;
+}
+
+.results-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.result-stat-card {
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    text-align: center;
+}
+
+.result-stat-value {
+    color: white;
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.result-stat-label {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Staff Assignments Table */
+.staff-assignments {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.staff-assignments-header {
+    padding: 16px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.staff-assignments-header h4 {
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.staff-assignment-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.staff-assignment-item {
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.3s;
+}
+
+.staff-assignment-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.staff-assignment-item:last-child {
+    border-bottom: none;
+}
+
+.staff-assignment-name {
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.staff-assignment-details {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.staff-assignment-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.assignment-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.assignment-badge.clinical {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.assignment-badge.front {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+.assignment-badge.gopd {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+/* PR Bot */
+.pr-bot-trigger {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    transition: all 0.3s;
+    z-index: 9999;
+    animation: pulse 2s infinite;
+}
+
+.pr-bot-trigger:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.7);
+}
+
+.pr-bot-chat {
+    position: fixed;
+    bottom: 110px;
+    right: 32px;
+    width: 420px;
+    height: 600px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 24px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+    display: none;
+    flex-direction: column;
+    z-index: 9998;
+    animation: slideUp 0.4s ease;
+}
+
+.pr-bot-chat.open {
+    display: flex;
+}
+
+.pr-bot-chat-header {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    padding: 20px 24px;
+    border-radius: 24px 24px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pr-bot-chat-header h3 {
+    color: white;
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pr-bot-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.pr-bot-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.pr-bot-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.bot-message {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    animation: fadeInUp 0.3s ease;
+}
+
+.bot-message.user {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    border-radius: 16px 16px 4px 16px;
+}
+
+.bot-message.assistant {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 16px 16px 16px 4px;
+}
+
+.pr-bot-input-area {
+    padding: 20px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    gap: 12px;
+}
+
+.pr-bot-input {
+    flex: 1;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.pr-bot-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.pr-bot-send {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.pr-bot-send:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(99, 102, 241, 0.4);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5); }
+    50% { box-shadow: 0 8px 32px rgba(99, 102, 241, 0.8); }
+}
+
+@keyframes progressBar {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+/* Action Buttons */
+.gen-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    margin-top: 32px;
+}
+
+.gen-btn {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.gen-btn-primary {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.gen-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.5);
+}
+
+.gen-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.gen-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Scrollbar Styling */
+.ai-gen-body::-webkit-scrollbar,
+.staff-selection::-webkit-scrollbar,
+.staff-assignment-list::-webkit-scrollbar,
+.pr-bot-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.ai-gen-body::-webkit-scrollbar-track,
+.staff-selection::-webkit-scrollbar-track,
+.staff-assignment-list::-webkit-scrollbar-track,
+.pr-bot-messages::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.ai-gen-body::-webkit-scrollbar-thumb,
+.staff-selection::-webkit-scrollbar-thumb,
+.staff-assignment-list::-webkit-scrollbar-thumb,
+.pr-bot-messages::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.5);
+    border-radius: 4px;
+}
+
+.ai-gen-body::-webkit-scrollbar-thumb:hover,
+.staff-selection::-webkit-scrollbar-thumb:hover,
+.staff-assignment-list::-webkit-scrollbar-thumb:hover,
+.pr-bot-messages::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.7);
+}

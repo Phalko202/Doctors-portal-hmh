@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PR Staff Portal - Clinical Duty Roster</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pr_portal.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🏥 PR Portal</h2>
+                <p class="subtitle">Patient Relations Management</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-view="clinical-roster">
+                    <span class="icon">📋</span>
+                    <span>Clinical Duty Roster</span>
+                </button>
+                <button class="nav-item" data-view="month-view">
+                    <span class="icon">📅</span>
+                    <span>Month View</span>
+                </button>
+                <button class="nav-item" data-view="schedule-sheet">
+                    <span class="icon">📊</span>
+                    <span>PR Schedule Sheet</span>
+                </button>
+                <button class="nav-item" data-view="front-roster" disabled>
+                    <span class="icon">🎯</span>
+                    <span>Front Duty Roster</span>
+                    <span class="badge">Coming Soon</span>
+                </button>
+                <button class="nav-item" data-view="staff-list">
+                    <span class="icon">👥</span>
+                    <span>Staff Management</span>
+                </button>
+                <button class="nav-item" data-view="gopd-config">
+                    <span class="icon">⚙️</span>
+                    <span>GOPD Configuration</span>
+                </button>
+                <button class="nav-item" data-view="station-knowledge">
+                    <span class="icon">🧠</span>
+                    <span>Station Knowledge Base</span>
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="/admin" class="back-link">← Back to Admin</a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Clinical Roster View -->
+            <div id="clinical-roster-view" class="view-panel active">
+                <div class="view-header">
+                    <div>
+                        <h1>Clinical Duty Roster</h1>
+                        <p class="view-description">Manage clinical staff assignments based on doctor schedules</p>
+                    </div>
+                    <div class="header-actions">
+                        <button id="exportExcelBtn" class="btn btn-secondary">
+                            <span class="icon">📥</span>
+                            Export Excel
+                        </button>
+                        <button id="generateDutyBtn" class="btn btn-primary">
+                            <span class="icon">🤖</span>
+                            Generate Duty (AI)
+                        </button>
+                        <button id="refreshRosterBtn" class="btn btn-secondary">
+                            <span class="icon">🔄</span>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Date Range Selector -->
+                <div class="date-controls">
+                    <div class="date-input-group">
+                        <label>Start Date:</label>
+                        <input type="date" id="rosterStartDate" class="date-input">
+                    </div>
+                    <div class="date-input-group">
+                        <label>End Date:</label>
+                        <input type="date" id="rosterEndDate" class="date-input">
+                    </div>
+                    <button id="loadRosterBtn" class="btn btn-accent">Load Roster</button>
+                </div>
+
+                <!-- Legend -->
+                <div class="leave-legend">
+                    <div class="legend-title">Leave Types Legend:</div>
+                    <div class="legend-items" id="leaveLegend"></div>
+                </div>
+
+                <!-- Roster Calendar Grid -->
+                <div id="rosterCalendar" class="roster-calendar">
+                    <div class="roster-placeholder">
+                        <div class="placeholder-icon">📅</div>
+                        <p>Select a date range and click "Load Roster" to view the clinical duty schedule</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staff List View -->
+            <div id="staff-list-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>Staff Management</h1>
+                        <p class="view-description">Add and manage PR staff members with role assignments</p>
+                    </div>
+                    <div class="header-actions">
+                        <button id="addStaffBtn" class="btn btn-primary">
+                            <span class="icon">➕</span>
+                            Add Staff Member
+                        </button>
+                    </div>
+                </div>
+
+                <div id="staffList" class="staff-grid"></div>
+            </div>
+
+            <!-- Station Knowledge View -->
+            <div id="station-knowledge-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>Station Knowledge Base</h1>
+                        <p class="view-description">Configure duty stations for clinical and front desk operations</p>
+                    </div>
+                    <div class="header-actions">
+                        <button id="customNamesBtn" class="btn btn-secondary">
+                            <span class="icon">✏️</span>
+                            Custom Station Names
+                        </button>
+                        <button id="addStationBtn" class="btn btn-primary">
+                            <span class="icon">➕</span>
+                            Add Custom Station
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stations-container">
+                    <div class="station-category">
+                        <h2>Clinical Stations</h2>
+                        <p class="category-desc">Stations from doctor specialties + custom clinical stations</p>
+                        <div id="clinicalStations" class="station-list"></div>
+                    </div>
+                    
+                    <div class="station-category">
+                        <h2>Front Desk Stations</h2>
+                        <p class="category-desc">Custom front desk duty stations</p>
+                        <div id="frontStations" class="station-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GOPD Configuration View -->
+            <div id="gopd-config-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>GOPD Configuration</h1>
+                        <p class="view-description">Configure GOPD (General OPD) staff allocation for public holidays</p>
+                    </div>
+                </div>
+
+                <div class="config-container">
+                    <div class="config-card">
+                        <h3>🏥 GOPD Staffing Rules</h3>
+                        <p class="config-desc">On public holidays, specialist duties are reduced and GOPD (General OPD) operates instead</p>
+                        
+                        <div class="form-group">
+                            <label>Number of GOPD Staff Required:</label>
+                            <input type="number" id="gopdStaffCount" class="form-input" min="1" max="10" value="2">
+                        </div>
+
+                        <div class="form-group">
+                            <label>GOPD Shifts:</label>
+                            <div id="gopdShiftsList" class="shifts-list"></div>
+                            <button id="addGopdShiftBtn" class="btn btn-secondary btn-sm">
+                                <span class="icon">➕</span> Add Shift
+                            </button>
+                        </div>
+
+                        <button id="saveGopdConfigBtn" class="btn btn-primary">
+                            <span class="icon">💾</span> Save Configuration
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Month View -->
+            <div id="month-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>📅 Month View</h1>
+                        <p class="view-description">View and edit entire month roster at once</p>
+                    </div>
+                    <div class="header-actions">
+                        <button id="exportMonthBtn" class="btn btn-secondary">
+                            <span class="icon">📥</span> Export
+                        </button>
+                    </div>
+                </div>
+
+                <div class="month-controls">
+                    <button id="prevMonthBtn" class="btn btn-secondary">◄ Previous</button>
+                    <div class="month-selector">
+                        <select id="monthSelect" class="form-input">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <input type="number" id="yearInput" class="form-input" min="2020" max="2030" value="2025">
+                    </div>
+                    <button id="nextMonthBtn" class="btn btn-secondary">Next ►</button>
+                    <button id="loadMonthBtn" class="btn btn-accent">Load Month</button>
+                </div>
+
+                <div id="monthCalendar" class="month-calendar">
+                    <div class="roster-placeholder">
+                        <div class="placeholder-icon">📅</div>
+                        <p>Select month and year, then click "Load Month"</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PR Schedule Sheet View -->
+            <div id="schedule-sheet-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>📊 PR Schedule Sheet</h1>
+                        <p class="view-description">Excel-like editing with advanced features</p>
+                    </div>
+                    <div class="header-actions">
+                        <button id="clearStaffScheduleBtn" class="btn btn-danger">
+                            <span class="icon">🗑️</span> Clear Staff Schedule
+                        </button>
+                        <button id="saveSheetChangesBtn" class="btn btn-primary">
+                            <span class="icon">💾</span> Save Changes
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sheet-controls">
+                    <div class="date-input-group">
+                        <label>Start Date:</label>
+                        <input type="date" id="sheetStartDate" class="date-input">
+                    </div>
+                    <div class="date-input-group">
+                        <label>End Date:</label>
+                        <input type="date" id="sheetEndDate" class="date-input">
+                    </div>
+                    <button id="loadSheetBtn" class="btn btn-accent">Load Sheet</button>
+                </div>
+
+                <div id="scheduleSheet" class="schedule-sheet-container">
+                    <div class="roster-placeholder">
+                        <div class="placeholder-icon">📊</div>
+                        <p>Load date range to start editing</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Wizard-Based Add Staff Modal -->
+    <div id="addStaffModal" class="modal">
+        <div class="modal-content wizard-modal">
+            <div class="modal-header">
+                <h2>Add Staff Member - <span id="wizardStepTitle">Step 1: Basic Info</span></h2>
+                <button class="modal-close" data-modal="addStaffModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- Step 1: Name -->
+                <div class="wizard-step active" data-step="1">
+                    <div class="wizard-icon">👤</div>
+                    <h3>What is the staff member's name?</h3>
+                    <div class="form-group">
+                        <input type="text" id="staffNameInput" class="form-input" placeholder="Enter full name" autofocus>
+                    </div>
+                </div>
+
+                <!-- Step 2: Role Selection -->
+                <div class="wizard-step" data-step="2">
+                    <div class="wizard-icon">🎯</div>
+                    <h3>What role will they have?</h3>
+                    <div class="role-selection">
+                        <label class="role-card" data-role="clinical">
+                            <input type="radio" name="staffRole" value="clinical">
+                            <div class="role-card-content">
+                                <span class="role-icon">🏥</span>
+                                <span class="role-title">Clinical Staff</span>
+                                <span class="role-desc">Assigned to clinical duty rosters</span>
+                            </div>
+                        </label>
+                        <label class="role-card" data-role="front">
+                            <input type="radio" name="staffRole" value="front">
+                            <div class="role-card-content">
+                                <span class="role-icon">🎯</span>
+                                <span class="role-title">Front Desk Staff</span>
+                                <span class="role-desc">Front desk operations</span>
+                            </div>
+                        </label>
+                        <label class="role-card" data-role="training">
+                            <input type="radio" name="staffRole" value="training">
+                            <div class="role-card-content">
+                                <span class="role-icon">🎓</span>
+                                <span class="role-title">Training</span>
+                                <span class="role-desc">Staff in training program</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Step 3: Station Assignment (Clinical) -->
+                <div class="wizard-step" data-step="3-clinical">
+                    <div class="wizard-icon">🏥</div>
+                    <h3>Which clinical stations?</h3>
+                    <p class="step-desc">Select all stations this staff member can work at</p>
+                    <div id="clinicalStationsCheckboxes" class="station-checkboxes"></div>
+                </div>
+
+                <!-- Step 3: Station Assignment (Front) -->
+                <div class="wizard-step" data-step="3-front">
+                    <div class="wizard-icon">🎯</div>
+                    <h3>Which front desk stations?</h3>
+                    <p class="step-desc">Select all stations this staff member can work at</p>
+                    <div id="frontStationsCheckboxes" class="station-checkboxes"></div>
+                </div>
+
+                <!-- Step 3: Training Options -->
+                <div class="wizard-step" data-step="3-training">
+                    <div class="wizard-icon">🎓</div>
+                    <h3>Training Details</h3>
+                    <p class="step-desc">Configure training preferences</p>
+                    <div class="form-group">
+                        <label>Training in which department?</label>
+                        <select id="trainingDepartment" class="form-input">
+                            <option value="clinical">Clinical</option>
+                            <option value="front">Front Desk</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 4: Confirmation -->
+                <div class="wizard-step" data-step="4">
+                    <div class="wizard-icon">✅</div>
+                    <h3>Confirm Details</h3>
+                    <div class="confirmation-details">
+                        <div class="confirm-item">
+                            <strong>Name:</strong>
+                            <span id="confirmName"></span>
+                        </div>
+                        <div class="confirm-item">
+                            <strong>Role:</strong>
+                            <span id="confirmRole"></span>
+                        </div>
+                        <div class="confirm-item">
+                            <strong>Stations:</strong>
+                            <span id="confirmStations"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer wizard-footer">
+                <button class="btn btn-secondary" id="wizardPrevBtn" style="display: none;">◄ Previous</button>
+                <button class="btn btn-primary" id="wizardNextBtn">Next ►</button>
+                <button class="btn btn-primary" id="wizardFinishBtn" style="display: none;">✓ Add Staff</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Staff Modal -->
+    <div id="editStaffModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Staff Member</h2>
+                <button class="modal-close" data-modal="editStaffModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Staff Name *</label>
+                    <input type="text" id="editStaffNameInput" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Roles *</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="editRoleClinical" value="clinical">
+                            <span>Clinical Staff</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="editRoleFront" value="front">
+                            <span>Front Desk Staff</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="editRoleTraining" value="training">
+                            <span>Training</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Assigned Stations</label>
+                    <div id="editStationCheckboxes" class="checkbox-group"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-modal="editStaffModal">Cancel</button>
+                <button id="updateStaffBtn" class="btn btn-primary">Update Staff</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clear Staff Schedule Modal -->
+    <div id="clearScheduleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Clear Staff Schedule</h2>
+                <button class="modal-close" data-modal="clearScheduleModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    ⚠️ This will remove all assignments for the selected staff in the specified date range
+                </div>
+                <div class="form-group">
+                    <label>Select Staff:</label>
+                    <select id="clearStaffSelect" class="form-input"></select>
+                </div>
+                <div class="form-group">
+                    <label>Date Range:</label>
+                    <div class="date-range-group">
+                        <input type="date" id="clearStartDate" class="form-input">
+                        <span>to</span>
+                        <input type="date" id="clearEndDate" class="form-input">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-modal="clearScheduleModal">Cancel</button>
+                <button id="confirmClearBtn" class="btn btn-danger">Clear Schedule</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Station Modal (Simplified - No Color Picker) -->
+    <div id="addStationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Custom Station</h2>
+                <button class="modal-close" data-modal="addStationModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Station Name *</label>
+                    <input type="text" id="stationNameInput" class="form-input" placeholder="Enter station name">
+                </div>
+                <div class="form-group">
+                    <label>Station Type *</label>
+                    <select id="stationTypeSelect" class="form-input">
+                        <option value="clinical">Clinical Station</option>
+                        <option value="front">Front Desk Station</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-modal="addStationModal">Cancel</button>
+                <button id="saveStationBtn" class="btn btn-primary">Save Station</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Station Names Modal -->
+    <div id="customNamesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Custom Station Names</h2>
+                <button class="modal-close" data-modal="customNamesModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">
+                    Shorten long station names to save space in the roster views.
+                    For example, <strong>Orthopaedics</strong> → <strong>Ortho</strong>, <strong>General OPD Morning</strong> → <strong>GOPD-1</strong>.
+                </p>
+                <div id="customNamesList" class="custom-names-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-modal="customNamesModal">Close</button>
+                <button id="saveCustomNamesBtn" class="btn btn-primary">Save Custom Names</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Roster Cell Modal -->
+    <div id="editRosterModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Duty Assignment</h2>
+                <button class="modal-close" data-modal="editRosterModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Staff: <span id="editStaffName"></span></label>
+                    <label>Date: <span id="editDate"></span></label>
+                </div>
+                <div class="form-group">
+                    <label>Assignment Type *</label>
+                    <select id="dutyTypeSelect" class="form-input">
+                        <option value="duty">On Duty</option>
+                        <option value="leave">On Leave</option>
+                        <option value="off">Off Day</option>
+                    </select>
+                </div>
+                <div class="form-group" id="stationSelectGroup">
+                    <label>Assigned Station *</label>
+                    <select id="assignedStationSelect" class="form-input"></select>
+                </div>
+                <div class="form-group" id="leaveTypeGroup" style="display:none;">
+                    <label>Leave Type *</label>
+                    <select id="leaveTypeSelect" class="form-input"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-modal="editRosterModal">Cancel</button>
+                <button id="saveRosterBtn" class="btn btn-primary">Save Assignment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Generation Modal -->
+    <div id="aiGenerateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🤖 AI Duty Generation</h2>
+                <button class="modal-close" data-modal="aiGenerateModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">
+                    The AI will automatically generate duty assignments based on:
+                </p>
+                <ul class="feature-list">
+                    <li>✓ Doctor schedules and specialties</li>
+                    <li>✓ Staff availability and workload balance</li>
+                    <li>✓ Minimum 2 off days per week per staff</li>
+                    <li>✓ Fair distribution across all clinical stations</li>
+                </ul>
+                <div class="form-group">
+                    <label>Generation Date Range *</label>
+                    <div class="date-range-group">
+                        <input type="date" id="aiStartDate" class="form-input">
+                        <span>to</span>
+                        <input type="date" id="aiEndDate" class="form-input">
+                    </div>
+                </div>
+                <div class="alert alert-warning">
+                    ⚠️ This will overwrite existing assignments in the selected date range.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-modal="aiGenerateModal">Cancel</button>
+                <button id="confirmAiGenerateBtn" class="btn btn-primary">Generate Duty Roster</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced AI Generator Modal -->
+    <div id="aiGenModal" class="ai-gen-modal" style="display: none;">
+        <div class="ai-gen-container">
+            <div class="ai-gen-header">
+                <h2>🤖 AI Roster Generator</h2>
+                <button class="ai-gen-close" onclick="closeAiGenModal()">✕</button>
+            </div>
+            <div class="ai-gen-body">
+                <!-- Generation Mode Selection -->
+                <div class="gen-mode-tabs">
+                    <div class="gen-mode-tab active" data-mode="full" onclick="selectGenMode('full')">
+                        <h3>🌟 Full Generation</h3>
+                        <p>Generate complete roster for all active staff members</p>
+                    </div>
+                    <div class="gen-mode-tab" data-mode="special" onclick="selectGenMode('special')">
+                        <h3>⚡ Special Generation</h3>
+                        <p>Custom patterns and mixed assignments</p>
+                    </div>
+                    <div class="gen-mode-tab" data-mode="selective" onclick="selectGenMode('selective')">
+                        <h3>🎯 Selective Generation</h3>
+                        <p>Generate for specific staff members only</p>
+                    </div>
+                </div>
+
+                <!-- Full Generation Options -->
+                <div id="fullGenOptions" class="gen-options active">
+                    <div class="gen-option-group">
+                        <label class="gen-option-label">📅 Date Range</label>
+                        <div class="gen-date-range">
+                            <input type="date" id="fullGenStartDate" class="gen-date-input">
+                            <span style="color: rgba(255,255,255,0.6);">to</span>
+                            <input type="date" id="fullGenEndDate" class="gen-date-input">
+                        </div>
+                    </div>
+                    <div class="gen-actions">
+                        <button class="gen-btn gen-btn-secondary" onclick="closeAiGenModal()">Cancel</button>
+                        <button class="gen-btn gen-btn-primary" onclick="startFullGeneration()">
+                            <span>🚀</span><span>Generate Full Roster</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Special Generation Options -->
+                <div id="specialGenOptions" class="gen-options">
+                    <div class="gen-option-group">
+                        <label class="gen-option-label">📅 Date Range</label>
+                        <div class="gen-date-range">
+                            <input type="date" id="specialGenStartDate" class="gen-date-input">
+                            <span style="color: rgba(255,255,255,0.6);">to</span>
+                            <input type="date" id="specialGenEndDate" class="gen-date-input">
+                        </div>
+                    </div>
+                    <div class="gen-option-group">
+                        <label class="gen-option-label">🔄 Assignment Pattern</label>
+                        <div class="pattern-options">
+                            <div class="pattern-card selected" data-pattern="mixed-weekly" onclick="selectPattern('mixed-weekly')">
+                                <h4>📊 Mixed Weekly</h4>
+                                <p>Clinical one week, Front desk next week</p>
+                            </div>
+                            <div class="pattern-card" data-pattern="mixed-daily" onclick="selectPattern('mixed-daily')">
+                                <h4>🔀 Mixed Daily</h4>
+                                <p>Alternate between clinical and front daily</p>
+                            </div>
+                            <div class="pattern-card" data-pattern="balanced" onclick="selectPattern('balanced')">
+                                <h4>⚖️ Balanced</h4>
+                                <p>Equal distribution across all stations</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gen-actions">
+                        <button class="gen-btn gen-btn-secondary" onclick="closeAiGenModal()">Cancel</button>
+                        <button class="gen-btn gen-btn-primary" onclick="startSpecialGeneration()">
+                            <span>⚡</span><span>Generate Special Pattern</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Selective Generation Options -->
+                <div id="selectiveGenOptions" class="gen-options">
+                    <div class="gen-option-group">
+                        <label class="gen-option-label">📅 Date Range</label>
+                        <div class="gen-date-range">
+                            <input type="date" id="selectiveGenStartDate" class="gen-date-input">
+                            <span style="color: rgba(255,255,255,0.6);">to</span>
+                            <input type="date" id="selectiveGenEndDate" class="gen-date-input">
+                        </div>
+                    </div>
+                    <div class="gen-option-group">
+                        <label class="gen-option-label">👥 Select Staff Members</label>
+                        <div class="staff-selection" id="staffSelectionList"></div>
+                    </div>
+                    <div class="gen-actions">
+                        <button class="gen-btn gen-btn-secondary" onclick="closeAiGenModal()">Cancel</button>
+                        <button class="gen-btn gen-btn-primary" onclick="startSelectiveGeneration()">
+                            <span>🎯</span><span>Generate for Selected Staff</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="genLoadingState" class="ai-loading" style="display: none;">
+                    <div class="ai-loading-spinner"></div>
+                    <div class="ai-loading-text" id="loadingText">🤖 AI is generating your roster...</div>
+                    <div class="ai-loading-subtext" id="loadingSubtext">Please wait while we optimize staff assignments</div>
+                    <div class="ai-loading-progress">
+                        <div class="ai-loading-progress-bar"></div>
+                    </div>
+                </div>
+
+                <!-- Results State -->
+                <div id="genResultsState" class="ai-results" style="display: none;">
+                    <div class="ai-results-header">
+                        <h3>✅ Roster Generated Successfully!</h3>
+                        <p>Here's an overview of the generated assignments</p>
+                    </div>
+                    <div class="results-stats" id="resultsStats"></div>
+                    <div class="staff-assignments">
+                        <div class="staff-assignments-header">
+                            <h4>📋 Staff Assignments Overview</h4>
+                        </div>
+                        <div class="staff-assignment-list" id="staffAssignmentsList"></div>
+                    </div>
+                    <div class="gen-actions">
+                        <button class="gen-btn gen-btn-secondary" onclick="closeAiGenModalAndRefresh()">
+                            <span>✓</span><span>Done</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PR Bot Assistant -->
+    <button class="pr-bot-trigger" onclick="togglePrBot()" title="PR Assistant Bot">
+        🤖
+    </button>
+
+    <div id="prBotChat" class="pr-bot-chat">
+        <div class="pr-bot-chat-header">
+            <h3><span>🤖</span> PR Assistant</h3>
+            <button class="pr-bot-close" onclick="togglePrBot()">✕</button>
+        </div>
+        <div class="pr-bot-messages" id="prBotMessages">
+            <div class="bot-message assistant">
+                👋 Hi! I'm your PR Assistant. I can help you with:
+                <br>• Understanding roster generation
+                <br>• Checking staff assignments
+                <br>• Explaining system features
+                <br>• Troubleshooting issues
+                <br><br>What would you like to know?
+            </div>
+        </div>
+        <div class="pr-bot-input-area">
+            <input type="text" class="pr-bot-input" id="prBotInput" placeholder="Ask me anything..." onkeypress="handleBotKeypress(event)">
+            <button class="pr-bot-send" onclick="sendBotMessage()">Send</button>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_generator.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai-assistant.css') }}">
+    <script src="{{ url_for('static', filename='js/pr_portal.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ai_generator.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ai-assistant.js') }}"></script>
+</body>
+</html>

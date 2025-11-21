@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login - Doctors Schedule Portal</title>
+  <link rel="stylesheet" href="/static/css/admin.css" />
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg, #0a2420 0%, #0d3830 50%, #0f4a3d 100%);
+      color:#fff;
+      position:relative;
+      overflow:hidden;
+    }
+    body::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background-image:var(--custom-bg);
+      background-size:cover;
+      background-position:center;
+      opacity:0.4;
+      z-index:0;
+    }
+    body::after{
+      content:'';
+      position:absolute;
+      top:-50%;
+      right:-50%;
+      width:200%;
+      height:200%;
+      background:radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%);
+      animation:rotate 30s linear infinite;
+      z-index:0;
+    }
+    @keyframes rotate{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(20px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    @keyframes pulse{
+      0%,100%{box-shadow:0 0 20px rgba(16,185,129,0.3), 0 20px 50px rgba(0,0,0,0.4)}
+      50%{box-shadow:0 0 30px rgba(16,185,129,0.5), 0 20px 50px rgba(0,0,0,0.5)}
+    }
+    .login-container{
+      position:relative;
+      z-index:1;
+      width:min(420px,92vw);
+      animation:fadeIn 0.8s ease-out;
+    }
+    .logo-area{
+      text-align:center;
+      margin-bottom:30px;
+      animation:fadeIn 1s ease-out 0.2s backwards;
+    }
+    .logo-area img{
+      max-width:140px;
+      max-height:140px;
+      object-fit:contain;
+      margin-bottom:16px;
+      filter:drop-shadow(0 4px 12px rgba(16,185,129,0.4));
+    }
+    .logo-area h1{
+      font-size:42px;
+      font-weight:900;
+      margin-bottom:8px;
+      color:#ffffff !important;
+      text-shadow:0 4px 16px rgba(255,255,255,0.8), 0 2px 8px rgba(16,185,129,0.9), 0 0 30px rgba(255,255,255,0.5);
+      letter-spacing:0.5px;
+    }
+    .logo-area p{
+      font-size:16px;
+      color:#e0f2ed;
+      font-weight:600;
+      text-shadow:0 2px 6px rgba(0,0,0,0.3);
+    }
+    .login-card{
+      background:rgba(13,56,48,0.75);
+      backdrop-filter:blur(20px);
+      border:1px solid rgba(16,185,129,0.2);
+      border-radius:24px;
+      padding:36px 32px;
+      box-shadow:0 0 20px rgba(16,185,129,0.3), 0 20px 50px rgba(0,0,0,0.4);
+      animation:fadeIn 1s ease-out 0.4s backwards, pulse 4s ease-in-out infinite;
+    }
+    .form-group{
+      margin-bottom:20px;
+    }
+    .form-group label{
+      display:block;
+      font-size:13px;
+      font-weight:700;
+      color:#9eb8b0;
+      margin-bottom:8px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+    .form-group input{
+      width:100%;
+      padding:14px 16px;
+      background:rgba(10,36,32,0.6);
+      border:2px solid rgba(16,185,129,0.25);
+      border-radius:12px;
+      color:#fff;
+      font-size:15px;
+      transition:all 0.3s ease;
+      outline:none;
+    }
+    .form-group input:focus{
+      border-color:#10b981;
+      background:rgba(10,36,32,0.8);
+      box-shadow:0 0 15px rgba(16,185,129,0.3);
+    }
+    .form-group input::placeholder{
+      color:#3a5f54;
+    }
+    .error{
+      color:#ff7b7b;
+      font-size:13px;
+      min-height:18px;
+      margin:10px 0;
+      text-align:center;
+      font-weight:600;
+      animation:fadeIn 0.3s ease-out;
+    }
+    .login-btn{
+      width:100%;
+      padding:14px;
+      background:linear-gradient(135deg, #10b981, #34e89e);
+      border:none;
+      border-radius:12px;
+      color:#0a2420;
+      font-size:16px;
+      font-weight:800;
+      cursor:pointer;
+      transition:all 0.3s ease;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-top:8px;
+      box-shadow:0 6px 20px rgba(16,185,129,0.4);
+    }
+    .login-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 8px 25px rgba(16,185,129,0.5);
+      background:linear-gradient(135deg, #059669, #10b981);
+    }
+    .login-btn:active{
+      transform:translateY(0);
+    }
+    .footer-text{
+      text-align:center;
+      margin-top:24px;
+      font-size:12px;
+      color:#5a7d73;
+      animation:fadeIn 1.2s ease-out 0.6s backwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo-area">
+      <img id="hospitalLogo" src="" alt="Hospital Logo" style="display:none" />
+      <h1>Doctors Schedule Portal</h1>
+      <p>Hulhumale' Hospital Management System</p>
+    </div>
+    <div class="login-card">
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginUsername">Username</label>
+          <input id="loginUsername" autocomplete="username" placeholder="Enter your username" />
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Enter your password" />
+        </div>
+        <div class="error" id="loginErr"></div>
+        <button type="submit" class="login-btn">Sign In</button>
+      </form>
+    </div>
+    <div class="footer-text">Hulhumale' Hospital © 2024</div>
+  </div>
+  <script>
+    // Load custom background and logo if available
+    async function loadBranding(){
+      try{
+        const res = await fetch('/api/branding');
+        if(res.ok){
+          const data = await res.json();
+          if(data.background){
+            document.body.style.setProperty('--custom-bg', `url('${data.background}?t=${Date.now()}')`);
+          }
+          if(data.logo){
+            const img = document.getElementById('hospitalLogo');
+            img.src = data.logo + '?t=' + Date.now();
+            img.style.display = 'inline-block';
+          }
+        }
+      }catch{}
+    }
+    loadBranding();
+    
+    // Listen for branding updates via SSE
+    const es = new EventSource('/events');
+    es.addEventListener('branding_updated', ()=>{ loadBranding(); });
+
+    document.getElementById('loginForm').addEventListener('submit', async e=>{
+      e.preventDefault();
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      const errEl = document.getElementById('loginErr');
+      errEl.textContent = '';
+      try{
+        const res = await fetch('/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+        if(!res.ok){ const t=await res.text(); throw new Error(t||'Login failed'); }
+        location.href = '/';
+      }catch(err){ errEl.textContent = '✖ Invalid username or password'; }
+    });
+  </script>
+</body>
+</html>

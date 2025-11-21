@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "checkJs": false,
+    "noImplicitAny": false
+  },
+  "exclude": [
+    "node_modules",
+    ".venv",
+    "venv"
+  ]
+}

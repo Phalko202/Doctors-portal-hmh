@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Patient Display - Doctors Schedule Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* Full-screen promotional slideshow optimized for 3840x2160 portrait */
+    *{margin:0;padding:0;box-sizing:border-box}
+    body,html{width:100%;height:100vh;overflow:hidden;font-family:Poppins,system-ui,sans-serif;background:#000}
+    #patientList{width:100%;height:100%;position:relative}
+    .promo-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transition:opacity .7s ease}
+    .promo-slide.active{opacity:1;z-index:1}
+  /* Layered poster: blurred fill + hero */
+  .bg-fill{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(38px) brightness(.9) saturate(1.05);transform:scale(1.12);opacity:.9;transition:opacity .6s ease}
+  .promo-bg{position:absolute;top:50%;left:50%;height:100%;width:auto;max-width:100%;transform:translate(-50%,-50%);object-fit:contain;object-position:center top;transition:object-position .4s ease, transform .6s ease}
+  body.fit-cover-centered .promo-bg{height:100%;width:100%;transform:translate(-50%,-50%) scale(1.02);object-fit:cover}
+  body.fit-top .promo-bg{object-position:center top}
+  body.fit-contain .promo-bg{object-fit:contain}
+  /* Smart fit scaling: constrain very tall portrait posters so torso fits */
+  body.fit-contain .promo-bg{object-fit:contain;background:#000}
+  body.fit-cover-centered .promo-bg{object-position:center center}
+  body.fit-top .promo-bg{object-position:center top}
+  /* Aspect ratio adjustments */
+  body.aspect-ultrawide .promo-bg{object-position:center center}
+  body.aspect-ultrawide .schedule-overlay{right:4vw;max-width:560px}
+  body.aspect-standard .promo-bg{object-fit:cover}
+  /* Do not force contain on portrait; let JS-driven fit-* classes decide */
+  body.aspect-portrait.fit-cover-centered .promo-bg{object-fit:cover}
+  body.aspect-portrait.fit-contain .promo-bg{object-fit:contain}
+  /* Portrait: bottom-center overlay */
+  body.aspect-portrait .schedule-overlay{top:auto;bottom:80px;right:auto;left:50%;transform:translate(-50%, 0);max-width:85vw}
+  body.aspect-tall .schedule-overlay{top:55%;}
+  /* Schedule overlay repositioned to mid-right area (inside red box reference) */
+  .schedule-overlay{position:absolute;top:50%;right:80px;transform:translateY(-50%);min-width:640px;max-width:1100px;background:rgba(255,255,255,0.96);border-radius:32px;padding:52px 64px;box-shadow:0 16px 48px rgba(0,0,0,.45);backdrop-filter:blur(12px);border:4px solid #fff;z-index:3}
+  .schedule-overlay.dynamic-pos{right:auto;left:calc(var(--overlay-left, 60%) + 20px);} /* when JS repositions next to portrait poster */
+  .schedule-overlay.empty{background:rgba(255,255,255,0.15);border:2px dashed rgba(255,255,255,0.4);color:#fff;padding:40px 48px;backdrop-filter:blur(6px)}
+  .schedule-overlay.empty .placeholder{font-size:28px;letter-spacing:.5px;font-weight:600;opacity:.8}
+    .schedule-overlay .date-header{font-size:42px;font-weight:900;color:#03303b;margin-bottom:28px;letter-spacing:.8px;text-transform:uppercase}
+  .schedule-overlay .info-row{margin:24px 0;font-size:36px;font-weight:700;color:#04313b;display:grid;grid-template-columns:320px 1fr;align-items:start;gap:24px}
+  .schedule-overlay .info-row .lbl{font-size:28px;font-weight:900;opacity:.72;letter-spacing:1.1px;text-transform:uppercase;white-space:nowrap}
+  .schedule-overlay .info-row .val{font-weight:800;color:#0a5f6e;white-space:normal;overflow:visible;text-overflow:clip;word-break:break-word}
+    /* Fade transitions */
+    .fade-enter{opacity:0}
+    .fade-enter-active{transition:opacity .7s ease;opacity:1}
+    .fade-exit{opacity:1}
+    .fade-exit-active{transition:opacity .6s ease;opacity:0}
+    @media(max-width:1400px){
+      .schedule-overlay{right:60px;max-width:980px;padding:44px 52px}
+      .schedule-overlay .date-header{font-size:38px}
+      .schedule-overlay .info-row{font-size:32px;grid-template-columns:300px 1fr}
+      .schedule-overlay .info-row .lbl{font-size:26px}
+    }
+    @media(max-width:1100px){
+      .schedule-overlay{right:50px;max-width:880px;padding:40px 48px}
+      .schedule-overlay .date-header{font-size:34px}
+      .schedule-overlay .info-row{font-size:28px;grid-template-columns:280px 1fr}
+      .schedule-overlay .info-row .lbl{font-size:24px}
+    }
+    @media(max-width:900px){
+      .schedule-overlay{right:40px;max-width:720px;padding:36px 44px;transform:translateY(-50%)}
+      .schedule-overlay .date-header{font-size:30px}
+      .schedule-overlay .info-row{font-size:24px;grid-template-columns:240px 1fr}
+      .schedule-overlay .info-row .lbl{font-size:22px}
+    }
+  </style>
+</head>
+<body>
+  <div id="patientList"></div>
+  <script id="patient-bootstrap" type="application/json">{{ (data or {}) | tojson | safe }}</script>
+  <script>
+    try {
+      window.__PATIENT_BOOTSTRAP__ = JSON.parse(document.getElementById('patient-bootstrap').textContent);
+    } catch (e) {
+      window.__PATIENT_BOOTSTRAP__ = {specialty_order:[], doctors:[]};
+    }
+    (function(){
+      function applyAspect(){
+        const w = window.innerWidth, h = window.innerHeight; const ratio = w/h;
+        document.body.classList.remove('aspect-ultrawide','aspect-widescreen','aspect-standard','aspect-portrait','aspect-tall');
+        if(ratio >= 2.2) document.body.classList.add('aspect-ultrawide');
+        else if(ratio >= 1.65) document.body.classList.add('aspect-widescreen');
+        else if(ratio >= 1.3) document.body.classList.add('aspect-standard');
+        else if(ratio >= 1.0) document.body.classList.add('aspect-tall');
+        else document.body.classList.add('aspect-portrait');
+      }
+      window.addEventListener('resize', applyAspect); applyAspect();
+    })();
+  </script>
+  <script src="/static/js/patient.js"></script>
+</body>
+</html>

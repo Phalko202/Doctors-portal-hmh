@@ -1,0 +1,948 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel - Doctors Schedule Portal</title>
+  <link rel="stylesheet" href="/static/css/admin.css" />
+  <style>
+    /* Added holiday manager styles */
+    .holiday-list{margin:10px 0;padding:0;list-style:none}
+    .holiday-row{position:relative;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;display:grid;grid-template-columns:120px 1fr auto;align-items:start;gap:10px}
+    .holiday-row input[type=checkbox]{appearance:none;width:20px;height:20px;border:2px solid var(--accent);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:var(--panel);margin:0}
+    .holiday-row input[type=checkbox]:checked{background:linear-gradient(135deg,var(--primary),var(--accent));border-color:transparent}
+    .holiday-row input[type=checkbox]:checked::after{content:'✓';color:#06202e;font-weight:800;font-size:12px}
+    .holiday-row .date{font-weight:800;letter-spacing:.5px}
+    .holiday-row .rsn{font-size:12px;color:var(--muted)}
+    #holidayList{display:flex;flex-direction:column;gap:8px}
+    /* Friday locked styling in closed days calendar */
+    .day-btn.friday-locked{background:rgba(255,193,7,0.15);border:2px solid rgba(255,193,7,0.4);cursor:not-allowed;opacity:0.7}
+    .day-btn.friday-locked:hover{transform:none;box-shadow:none}
+    .friday-badge{font-size:10px;font-weight:700;color:#f59e0b;margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
+    /* Dark mode readability for nav buttons */
+    .sidenav .nav-item{color:var(--text);font-weight:600;letter-spacing:.5px}
+  .sidenav .nav-item[data-target='closed-days']{background:linear-gradient(145deg,#132b3c,#0f2131);color:var(--text)}
+  :root.light .sidenav .nav-item[data-target='closed-days']{background:linear-gradient(145deg,#ffffff,#f1f6fb);color:var(--text)}
+  .sidenav .nav-item[data-target='closed-days'].active{background:linear-gradient(145deg,var(--primary),var(--accent));color:#06202e;font-weight:800}
+  :root.light .sidenav .nav-item[data-target='closed-days'].active{background:linear-gradient(145deg,var(--primary),var(--accent));color:#06202e;font-weight:800}
+    /* Schedule editor */
+    .schedule-editor-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+    .schedule-editor-bar input{max-width:170px}
+    .sched-table{width:100%;border-collapse:separate;border-spacing:0 6px}
+    .sched-table th{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);text-align:left;padding:4px 8px}
+    .sched-table td{background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:10px;font-size:12px;vertical-align:top}
+    .sched-table td input{background:var(--panel);padding:4px 6px;font-size:12px;border-radius:6px}
+    .sched-table td select{background:var(--panel);padding:4px 6px;font-size:12px;border-radius:6px}
+    .sched-actions{display:flex;flex-direction:column;gap:4px}
+    .badge-pill{display:inline-block;padding:2px 6px;border-radius:999px;font-size:10px;font-weight:700;background:var(--panel);border:1px solid var(--border);margin-right:4px}
+    /* Make anchor links more visible on dark background */
+    a, .nav-link{ color:#75d9ff; }
+    a:hover, .nav-link:hover{ color:#bff0ff; }
+    /* Fancy Save Button Hover Effects */
+    form button[type="submit"]:hover{
+      transform:translateY(-3px);
+      box-shadow:0 10px 30px rgba(16,185,129,0.6);
+    }
+    form button[type="submit"]:active{
+      transform:translateY(-1px);
+    }
+    form button[type="submit"]::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:-100%;
+      width:100%;
+      height:100%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition:left 0.6s ease;
+    }
+    form button[type="submit"]:hover::before{
+      left:100%;
+    }
+    /* File Manager Button Enhancement */
+    #openFileManagerBtn:hover{
+      transform:translateY(-3px) scale(1.05);
+      box-shadow:0 15px 40px rgba(139,92,246,0.5);
+    }
+    #openFileManagerBtn:active{
+      transform:translateY(-1px) scale(1.02);
+    }
+  </style>
+</head>
+<body>
+  <script>window.userRole = '{{ role or "PR" }}';</script>
+  <header class="topbar">
+    <div class="brand" style="display:flex;align-items:center;gap:10px">
+      <img id="brandLogoSmall" alt="Hospital Logo" style="height:32px;width:auto;display:none" />
+      <div>Doctors Schedule Portal <span style="opacity:.6;font-size:12px;margin-left:8px;font-weight:400">| Admin Panel</span></div>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center">
+    <button id="themeToggle" class="toggle futuristic-btn" title="Switch theme"><span class="btn-icon">🌙</span> <span class="btn-text">Dark Mode</span></button>
+    <button id="refresh" class="toggle futuristic-btn" title="Reload data"><span class="btn-icon">🔄</span> <span class="btn-text">Refresh</span></button>
+    <button id="logoutBtn" class="toggle futuristic-btn logout-btn" title="Sign out"><span class="btn-icon">🚪</span> <span class="btn-text">Logout</span></button>
+    </div>
+  </header>
+
+  <main class="container with-nav">
+    <!-- Sidebar navigation -->
+    <nav class="sidenav">
+      <div class="nav-title">Menu</div>
+      <button class="nav-item active" data-target="doctors">Doctors</button>
+      <button class="nav-item" data-target="schedule">Schedule</button>
+      <button class="nav-item" data-target="doctor-opd">Doctor OPD Information</button>
+      <button class="nav-item" data-target="closed-days">Closed Days Adjustment</button>
+      <button class="nav-item" data-target="logs" id="logsNavBtn" style="display:none">Telegram Logs</button>
+      <button class="nav-item" data-target="patient-display">Patient Display Settings</button>
+      <button class="nav-item nav-parent" id="adminSettingsToggle">Admin Settings <span class="chevron">▼</span></button>
+      <div class="nav-submenu" id="adminSettingsSubmenu">
+        <button class="nav-item nav-child" data-target="media">⚙ Media Manager</button>
+        <button class="nav-item nav-child" data-target="user-mgmt">👥 User Management</button>
+      </div>
+      <a class="nav-link" href="/pr-portal" target="_blank" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 12px 16px; border-radius: 10px; text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 600; margin-top: 8px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); transition: all 0.3s;">
+        <span style="font-size: 18px;">🏥</span> Open PR Portal ▶
+      </a>
+      <a class="nav-link" href="/display" target="_blank">Open PR Schedule ▶</a>
+      <a class="nav-link" href="/patient" target="_blank">Open Patient Display ▶</a>
+    </nav>
+
+    <!-- Doctors management content -->
+    <section id="content-doctors" class="content active">
+      <section class="panel">
+        <h2>Doctors</h2>
+        <div class="toolbar" style="flex-wrap:wrap">
+          <input id="search" placeholder="Search doctors" />
+            <select id="filter-spec"><option value="">All specialties</option></select>
+          <button id="manageSpecBtn" title="Manage specialties">Specialties</button>
+          <button id="addDoctorBtn" title="Add new doctor">+ Add</button>
+        </div>
+        <div id="list" class="doctor-list"></div>
+      </section>
+    </section>
+    <!-- Schedule management content (restored editor + overview) -->
+    <section id="content-schedule" class="content" style="display:none">
+      
+      <!-- STAGE 1: Upload Excel Files -->
+      <section class="panel" style="margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h2 style="margin:0">📤 Stage 1: Upload Excel Schedule Files</h2>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button id="openTemplateGen" type="button" style="background:rgba(59,130,246,0.15);border:2px solid rgba(59,130,246,0.3);padding:8px 16px;border-radius:10px;color:var(--text);font-size:13px;font-weight:700;cursor:pointer">📄 Generate Template</button>
+              <!-- Shift Knowledge button removed; OPD information now drives templates -->
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--muted);margin:4px 0 16px">Upload Excel files containing schedule data. Files are stored for review before processing.</div>
+        <div style="background:linear-gradient(135deg, rgba(59,130,246,0.08), rgba(96,165,250,0.05));border:2px solid rgba(59,130,246,0.2);border-radius:16px;padding:20px">
+          <form id="uploadExcelForm" style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+            <div style="flex:1;min-width:300px">
+              <input id="scheduleFile" type="file" accept=".xlsx,.xls" style="display:none" />
+              <label for="scheduleFile" class="file-btn" style="background:linear-gradient(135deg, #3b82f6, #60a5fa);color:#ffffff;padding:12px 20px;font-size:14px;display:inline-block;border-radius:10px;cursor:pointer">📁 Choose Excel File</label>
+              <span id="scheduleFileName" class="file-name" style="margin-left:12px;font-size:13px;color:var(--muted)">No file chosen</span>
+            </div>
+            <button type="submit" style="background:linear-gradient(135deg, #2563eb, #3b82f6);color:#ffffff;padding:12px 24px;border:none;border-radius:10px;font-weight:700;cursor:pointer">✓ Upload File</button>
+            <span id="uploadExcelMsg" style="font-size:12px;color:var(--muted);margin-left:8px"></span>
+          </form>
+        </div>
+      </section>
+
+      <!-- Shift Knowledge modal removed; Doctor OPD Information replaces this feature -->
+
+      <!-- STAGE 2: Review & Process -->
+      <section class="panel" style="margin-bottom:20px">
+        <h2>📊 Stage 2: Review & Process Uploaded Files</h2>
+        <div style="font-size:13px;color:var(--muted);margin:4px 0 16px">Select an uploaded file to preview statistics, then confirm to apply schedules.</div>
+        
+        <div style="background:linear-gradient(135deg, rgba(16,185,129,0.08), rgba(52,232,158,0.05));border:2px solid rgba(16,185,129,0.2);border-radius:16px;padding:20px">
+          <!-- File Selection -->
+          <div style="margin-bottom:20px">
+            <label style="display:block;font-weight:700;margin-bottom:8px;color:var(--text)">Select File to Process:</label>
+            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+              <select id="uploadedFileSelect" style="flex:1;min-width:300px;padding:12px;border:2px solid rgba(16,185,129,0.3);border-radius:10px;background:var(--card);color:var(--text);font-size:14px">
+                <option value="">-- Select a file --</option>
+              </select>
+              <button id="refreshFileListBtn" type="button" style="background:rgba(16,185,129,0.15);border:2px solid rgba(16,185,129,0.3);padding:10px 18px;border-radius:10px;color:var(--text);font-weight:700;cursor:pointer">🔄 Refresh List</button>
+              <button id="previewFileBtn" type="button" style="background:linear-gradient(135deg, #10b981, #34e89e);color:#ffffff;padding:12px 24px;border:none;border-radius:10px;font-weight:700;cursor:pointer">📋 Preview Statistics</button>
+            </div>
+          </div>
+
+          <!-- FILE MANAGER BUTTON -->
+          <div style="margin-top:24px;text-align:center">
+            <button id="openFileManagerBtn" type="button" onclick="window.openFileManager()" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" style="background:linear-gradient(135deg, #8b5cf6, #a78bfa);color:#ffffff;padding:16px 32px;border:none;border-radius:16px;font-weight:800;cursor:pointer;font-size:16px;box-shadow:0 8px 24px rgba(139,92,246,0.3);transition:all 0.3s ease;display:inline-flex;align-items:center;gap:12px">
+              <span style="font-size:24px">📂</span>
+              <span>Open File Manager</span>
+            </button>
+          </div>
+
+          <!-- Preview Statistics -->
+          <div id="previewSection" style="display:none;margin-top:24px;padding:20px;background:rgba(16,185,129,0.05);border:2px solid rgba(16,185,129,0.25);border-radius:12px">
+            <h3 style="margin:0 0 16px;color:var(--primary);font-size:18px;font-weight:800">📈 Schedule Preview</h3>
+            <div id="previewStats" style="margin-bottom:20px"></div>
+            <div style="display:flex;gap:12px;justify-content:flex-end">
+              <button id="cancelProcessBtn" type="button" style="background:rgba(239,68,68,0.15);border:2px solid rgba(239,68,68,0.3);padding:10px 20px;border-radius:10px;color:var(--text);font-weight:700;cursor:pointer">✕ Cancel</button>
+              <button id="confirmProcessBtn" type="button" style="background:linear-gradient(135deg, #059669, #10b981);color:#ffffff;padding:12px 28px;border:none;border-radius:10px;font-weight:800;cursor:pointer;font-size:15px">✓ Confirm & Apply Schedules</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Per-Date Manual Editor (Existing) -->
+      <section class="panel">
+        <h2>Per-Date Schedule Editor</h2>
+        <div class="schedule-editor-bar">
+          <label style="margin:0 12px 0 0;font-size:12px;position:relative;display:inline-flex;flex-direction:column;gap:4px">Date
+            <span style="position:absolute;right:8px;bottom:8px;font-size:20px;pointer-events:none;z-index:1">📅</span>
+            <input id="schedDate" type="date" style="padding-right:35px" />
+          </label>
+          <!-- New: quick search and specialty filter for schedule rows -->
+          <label style="margin:0 12px 0 0;font-size:12px;display:inline-flex;flex-direction:column;gap:4px">
+            Search
+            <input id="schedSearch" type="text" placeholder="🔍 Search doctor name..." style="min-width:220px;padding:10px 12px;border:2px solid rgba(16,185,129,0.3);border-radius:8px;background:var(--card);color:var(--text);font-size:13px" />
+          </label>
+          <label style="margin:0 12px 0 0;font-size:12px;display:inline-flex;flex-direction:column;gap:4px">
+            Specialty Filter
+            <select id="schedSpecFilter" style="min-width:200px;padding:10px 12px;border:2px solid rgba(16,185,129,0.3);border-radius:8px;background:var(--card);color:var(--text);font-size:13px;font-weight:600">
+              <option value="">All specialties</option>
+            </select>
+          </label>
+          <button id="reloadScheduleBtn">Load</button>
+          <button id="saveScheduleBtn">Save Changes</button>
+          <button id="clearSelectedDateBtn" title="Clear all schedules for the selected date" style="background:linear-gradient(135deg, rgba(239,68,68,0.9), rgba(239,68,68,0.8));border:2px solid rgba(239,68,68,0.4);color:#fff">Clear Selected Date</button>
+          <button id="clearWindowBtn" title="Set all statuses to OFF for the next 14 visible days" style="background:linear-gradient(135deg, rgba(245,158,11,0.9), rgba(251,191,36,0.85));border:2px solid rgba(251,191,36,0.45);color:#06202e">Clear 14 Days</button>
+          <span id="schedStatus" style="font-size:12px;color:var(--muted);"></span>
+        </div>
+        <div style="overflow:auto">
+          <table class="sched-table" id="schedTable">
+            <thead>
+              <tr>
+                <th>Doctor</th>
+                <th>Start</th>
+                <th>Status</th>
+                <th>Room</th>
+                <th>Total Patients</th>
+                <th>Before Break Pts</th>
+                <th>Breaks</th>
+                <th>After Break Pts</th>
+                <th>Designation</th>
+                <th>Reason</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="inline-note">Edit multiple doctors then press Save Changes. Enter Before/After break patient numbers and break ranges (comma separated like 11:00-11:30, 13:00-13:15). Breaks column now sits between Before / After counts (matches Excel template). OPD slot entry removed.</div>
+      </section>
+      
+      <!-- Bulk Clear/Set Status Tools -->
+      <section class="panel" style="margin-top:14px">
+        <h2 style="margin-top:0">Bulk Status Tools</h2>
+        <p style="margin:4px 0 12px;font-size:12px;line-height:1.4;color:var(--muted)">Quickly clean statuses for a date or for the 14‑day coverage window. Use this before uploading or entering fresh schedules.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">
+          <label style="font-size:11px;display:flex;flex-direction:column">Date
+            <input type="date" id="clearStatusDate" style="padding:8px;border:2px solid rgba(59,130,246,0.3);border-radius:8px;background:rgba(59,130,246,0.05);color:var(--text)" />
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="clearStatus14" /> Apply to next 14 days</label>
+          <button id="clearStatusSetBtn" type="button" style="background:linear-gradient(135deg, rgba(239,68,68,0.9), rgba(239,68,68,0.8));border:2px solid rgba(239,68,68,0.4);color:#fff;padding:10px 16px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px">Set OFF for all</button>
+          <button id="clearStatusRemoveBtn" type="button" style="background:linear-gradient(135deg, rgba(245,158,11,0.9), rgba(251,191,36,0.85));border:2px solid rgba(251,191,36,0.45);color:#06202e;padding:10px 16px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px">Remove overrides</button>
+          <span id="clearStatusMsg" style="font-size:12px;color:var(--muted);font-weight:600"></span>
+        </div>
+      </section>
+      <section class="panel" style="margin-top:14px">
+        <h2 style="margin-top:0">14-Day Coverage Overview</h2>
+        <p style="margin:4px 0 12px;font-size:12px;line-height:1.4;color:var(--muted)">Shows upcoming doctor coverage for the next 14 days. Each line lists ON_DUTY / total doctors per specialty so you can quickly spot staffing gaps or closed days. Expand a day to view detailed doctor status list.</p>
+        <div id="scheduleList" style="min-height:40px;font-size:12px"></div>
+      </section>
+    </section>
+
+    <!-- Doctor OPD Information Section -->
+    <section id="content-doctor-opd" class="content" style="display:none">
+      <section class="panel">
+        <h2>🩺 Doctor OPD Information</h2>
+        <p style="margin:4px 0 18px;font-size:13px;color:var(--muted);line-height:1.6">
+          Configure specialty-specific OPD timing templates. These templates define morning and evening shift patterns for each medical specialty, 
+          making it easier to manage appointment schedules and patient flow.
+        </p>
+
+        <!-- Specialty Tabs -->
+        <div style="border-bottom:2px solid var(--border);margin-bottom:20px">
+          <div id="opdSpecialtyTabs" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:-2px"></div>
+        </div>
+
+        <!-- Active Specialty Content -->
+        <div id="opdSpecialtyContent" style="min-height:300px">
+          <div style="text-align:center;padding:60px 20px;color:var(--muted)">
+            <div style="font-size:48px;margin-bottom:16px">📋</div>
+            <div style="font-size:16px;font-weight:600;margin-bottom:8px">No Specialties Configured</div>
+            <div style="font-size:13px">Click "Add Specialty" to create your first OPD template</div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
+          <button id="addOpdSpecialtyBtn" class="toggle" style="display:none;background:linear-gradient(135deg, #10b981, #059669);color:white;font-weight:600">
+            ➕ Add Specialty
+          </button>
+          <button id="saveAllOpdBtn" class="toggle" style="background:linear-gradient(135deg, #3b82f6, #2563eb);color:white;font-weight:600">
+            💾 Save All Changes
+          </button>
+          <span id="opdSaveMsg" style="font-size:12px;color:var(--muted);align-self:center"></span>
+        </div>
+      </section>
+    </section>
+
+    <!-- Holidays / Closed days content renamed and expanded -->
+    <section id="content-closed-days" class="content" style="display:none">
+      <section class="panel">
+        <h2>Closed Days Adjustment</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+          <button id="openHolidayModal" class="toggle">+ Add Closed Day</button>
+          <button id="bulkAddBtn" class="toggle">Bulk Add</button>
+          <button id="bulkReopenBtn" class="toggle">Bulk Reopen</button>
+          <button id="refreshHolidaysBtn">Refresh</button>
+        </div>
+        <div style="margin:8px 0 14px;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--panel)">
+          <div style="font-size:12px;font-weight:600;margin-bottom:6px">Quick Add (single date)</div>
+          <form id="quickClosedForm" style="display:flex;flex-wrap:wrap;gap:6px;align-items:flex-end">
+            <label style="font-size:11px;display:flex;flex-direction:column">Date
+              <input type="date" id="quickClosedDate" />
+            </label>
+            <label style="font-size:11px;display:flex;flex-direction:column">Reason
+              <input type="text" id="quickClosedReason" placeholder="OPD CLOSED DAY" />
+            </label>
+            <button type="submit" class="toggle" style="height:32px">Add to List</button>
+            <button type="button" id="quickClosedApply" style="height:32px">Save All</button>
+            <span id="quickClosedStatus" style="font-size:11px;color:var(--muted)"></span>
+          </form>
+          <div id="quickClosedList" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px"></div>
+        </div>
+        <ul id="holidayList" class="holiday-list"></ul>
+        <div class="inline-note">Select a day button to add. Closed days hide all doctor cards on display.</div>
+      </section>
+    </section>
+
+    <!-- Telegram logs content (ADMIN ONLY) -->
+    <section id="content-logs" class="content" aria-hidden="true" style="display:none">
+      <section class="panel">
+        <h2>Telegram Logs <span style="font-size:12px;color:#ef4444;font-weight:800">(ADMIN ONLY)</span></h2>
+        <div class="telemetry">
+          <div class="tele-head">Last 100 lines</div>
+          <pre id="tglog" class="tele-log">Loading…</pre>
+        </div>
+        <div style="margin-top:10px;color:var(--muted);font-size:12px">🔒 Telegram logs are only visible to administrators for debugging purposes.</div>
+      </section>
+    </section>
+
+    <!-- Media Upload (Admin Only) -->
+    <section id="content-media" class="content" style="display:none">
+      <section class="panel">
+        <h2>🎨 Media Manager</h2>
+        <div style="font-size:13px;color:var(--muted);margin:4px 0 18px;line-height:1.6">Centralized media management for all branding assets.</div>
+        
+        <!-- Login Page Logo (Light Background) -->
+        <div style="background:linear-gradient(135deg, rgba(16,185,129,0.08), rgba(52,232,158,0.05));border:2px solid rgba(16,185,129,0.2);border-radius:16px;padding:20px;margin-bottom:28px">
+          <h3 style="margin:0 0 12px;font-size:18px;color:var(--primary);font-weight:800;display:flex;align-items:center;gap:8px">
+            <span style="font-size:24px">�</span> Login Page Logo (Light Background)
+          </h3>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:16px;padding:10px;background:rgba(16,185,129,0.05);border-left:3px solid var(--primary);border-radius:6px">
+            <strong>⚡ This logo appears ONLY on:</strong><br/>
+            • Login Page (light/white background)<br/>
+            • Admin Panel Header (Topbar)<br/>
+            <br/>
+            <strong style="color:#ef4444">⚠️ Important:</strong> Since login page has light background, use a darker/colored version of your logo for visibility.<br/>
+            (PR Display uses separate logo below – dark background)
+          </div>
+          <div style="margin-bottom:16px">
+            <div id="logoPreview" style="width:180px;height:180px;border:3px solid var(--border);border-radius:16px;background:#ffffff;display:flex;align-items:center;justify-content:center;margin-bottom:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08)">
+              <img id="logoPreviewImg" style="max-width:100%;max-height:100%;object-fit:contain" />
+            </div>
+            <form id="logoUploadForm" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+              <input id="logo-file" type="file" accept="image/*" style="display:none" />
+              <label for="logo-file" class="file-btn" style="background:linear-gradient(135deg, #10b981, #34e89e);color:#ffffff;padding:12px 18px;font-size:14px">📁 Choose Logo</label>
+              <span id="logo-file-name" class="file-name" style="font-size:13px"></span>
+              <button type="submit" style="background:linear-gradient(135deg, #008574, #00a88e);padding:12px 24px">✓ Upload</button>
+              <span id="logoMsg" style="font-size:12px;color:var(--muted);margin-left:8px"></span>
+            </form>
+          </div>
+        </div>
+        
+        <!-- PR Display Logo (Dark Background) -->
+        <div style="background:rgba(59,130,246,0.08);border:2px solid rgba(59,130,246,0.2);border-radius:16px;padding:20px;margin-bottom:28px">
+          <h3 style="margin:0 0 12px;font-size:18px;color:#3b82f6;font-weight:800;display:flex;align-items:center;gap:8px">
+            <span style="font-size:24px">📺</span> Patient Display Logo (Dark Background)
+          </h3>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:16px;padding:10px;background:rgba(59,130,246,0.05);border-left:3px solid #3b82f6;border-radius:6px">
+            <strong>📱 This logo appears ONLY on:</strong><br/>
+            • PR Schedule Display (public patient view)<br/>
+            • Large display TV screens<br/>
+            • Patient-facing display interfaces<br/>
+            <br/>
+            <strong style="color:#ef4444">⚠️ Important:</strong> Since display has dark background, use a light/white version of your logo for visibility.<br/>
+            (Login page uses separate logo above – light background)
+          </div>
+          <div style="margin-bottom:16px">
+            <div id="displayLogoPreview" style="width:180px;height:180px;border:3px solid var(--border);border-radius:16px;background:#ffffff;display:flex;align-items:center;justify-content:center;margin-bottom:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08)">
+              <img id="displayLogoPreviewImg" style="max-width:100%;max-height:100%;object-fit:contain" />
+            </div>
+            <form id="displayLogoUploadForm" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+              <input id="display-logo-file" type="file" accept="image/*" style="display:none" />
+              <label for="display-logo-file" class="file-btn" style="background:linear-gradient(135deg, #3b82f6, #60a5fa);color:#ffffff;padding:12px 18px;font-size:14px">📁 Choose Display Logo</label>
+              <span id="display-logo-file-name" class="file-name" style="font-size:13px"></span>
+              <button type="submit" style="background:linear-gradient(135deg, #2563eb, #3b82f6);padding:12px 24px">✓ Upload</button>
+              <span id="displayLogoMsg" style="font-size:12px;color:var(--muted);margin-left:8px"></span>
+            </form>
+          </div>
+        </div>
+        
+        <!-- Login Background (Separate) -->
+        <h3 style="margin:0 0 12px;font-size:16px;display:flex;align-items:center;gap:8px">
+          <span>🖼️</span> Login Background Image
+        </h3>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Custom background for login page only.</div>
+        <div>
+          <div id="bgPreview" style="width:320px;height:180px;border:2px solid var(--border);border-radius:12px;background:var(--card);display:flex;align-items:center;justify-content:center;margin-bottom:10px;overflow:hidden">
+            <img id="bgPreviewImg" style="width:100%;height:100%;object-fit:cover" />
+          </div>
+          <form id="bgUploadForm" style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+            <input id="bg-file" type="file" accept="image/*" style="display:none" />
+            <label for="bg-file" class="file-btn">Choose Background</label>
+            <span id="bg-file-name" class="file-name">No file chosen</span>
+            <button type="submit">Upload</button>
+            <span id="bgMsg" style="font-size:12px;color:var(--muted);margin-left:8px"></span>
+          </form>
+        </div>
+      </section>
+    </section>
+
+    <!-- User Management (Admin Only) -->
+    <section id="content-user-mgmt" class="content" style="display:none">
+      <section class="panel user-mgmt-panel">
+        <div class="panel-header">
+          <h2>👥 User Management</h2>
+          <p class="panel-subtitle">Create and manage system users with role-based access control</p>
+        </div>
+
+        <div class="add-user-card">
+          <h3 class="card-title">➕ Create New User</h3>
+          <form id="addUserForm" class="modern-form">
+            <div class="form-row">
+              <div class="form-field">
+                <label class="field-label">
+                  <span class="label-icon">👤</span>
+                  <span>Username</span>
+                </label>
+                <input id="nuName" class="modern-input" placeholder="Enter username" autocomplete="off" />
+              </div>
+              <div class="form-field">
+                <label class="field-label">
+                  <span class="label-icon">🔒</span>
+                  <span>Password</span>
+                </label>
+                <input id="nuPass" type="password" class="modern-input" placeholder="Enter password" autocomplete="new-password" />
+              </div>
+              <div class="form-field">
+                <label class="field-label">
+                  <span class="label-icon">🎭</span>
+                  <span>Role</span>
+                </label>
+                <select id="nuRole" class="modern-select">
+                  <option value="PR">🟢 PR - Public Relations</option>
+                  <option value="MEDICAL_ADMIN">🔵 Medical Admin</option>
+                  <option value="VIEW_ONLY">🟡 View Only</option>
+                  <option value="ADMIN">🔴 Admin - Full Access</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">
+                <span class="btn-icon">✨</span>
+                <span>Create User</span>
+              </button>
+              <span id="userMsg" class="form-message"></span>
+            </div>
+          </form>
+        </div>
+
+        <div class="role-info-grid">
+          <div class="role-card">
+            <div class="role-icon">🟢</div>
+            <div class="role-name">PR</div>
+            <div class="role-desc">Manage doctors only</div>
+          </div>
+          <div class="role-card">
+            <div class="role-icon">🔵</div>
+            <div class="role-name">Medical Admin</div>
+            <div class="role-desc">Full schedule management</div>
+          </div>
+          <div class="role-card">
+            <div class="role-icon">🟡</div>
+            <div class="role-name">View Only</div>
+            <div class="role-desc">Read-only access</div>
+          </div>
+          <div class="role-card">
+            <div class="role-icon">🔴</div>
+            <div class="role-name">Admin</div>
+            <div class="role-desc">Complete system control</div>
+          </div>
+        </div>
+
+        <div id="usersPanel" data-admin-only="1" style="display:none">
+          <div id="usersList"></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- Patient Display Settings -->
+    <section id="content-patient-display" class="content" style="display:none">
+      <section class="panel">
+        <h2>Patient Display Settings</h2>
+        <div style="font-size:12px;color:var(--muted);margin:4px 0 14px">Adjust the slideshow rotation interval used on the public patient display screen. This broadcasts instantly to all open patient display pages.</div>
+        <form id="patientDisplayForm" style="display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start">
+          <label style="display:flex;flex-direction:column;font-size:12px">Slide Interval (seconds)
+            <input type="number" id="pdRotate" min="3" max="300" step="1" value="12" />
+          </label>
+          <label style="display:flex;flex-direction:column;font-size:12px">Display Resolution
+            <select id="pdResolution">
+              <option value="auto">Auto (default)</option>
+              <option value="3840x2160">3840x2160 (4K UHD)</option>
+              <option value="2560x1440">2560x1440 (2K QHD)</option>
+              <option value="1920x1200">1920x1200 (WUXGA)</option>
+              <option value="1920x1080">1920x1080 (Full HD)</option>
+              <option value="1680x1050">1680x1050 (WSXGA+)</option>
+              <option value="1600x900">1600x900 (HD+)</option>
+              <option value="1440x900">1440x900 (WXGA+)</option>
+              <option value="1366x768">1366x768 (HD)</option>
+              <option value="1280x1024">1280x1024 (SXGA)</option>
+              <option value="1280x800">1280x800 (WXGA)</option>
+              <option value="1280x720">1280x720 (HD 720p)</option>
+            </select>
+          </label>
+          <label style="display:flex;flex-direction:column;font-size:12px">Fill Mode
+            <select id="pdFillMode">
+              <option value="auto">Auto</option>
+              <option value="cover">Cover (full-bleed)</option>
+              <option value="contain">Contain (fit-letterbox)</option>
+            </select>
+          </label>
+          <fieldset style="border:1px solid var(--border);padding:10px 14px;border-radius:10px;display:flex;flex-direction:column;gap:6px;min-width:220px">
+            <legend style="font-size:11px;font-weight:700;letter-spacing:.5px;padding:0 4px">Show / Hide</legend>
+            <label style="font-size:12px;display:flex;align-items:center;gap:6px"><input type="checkbox" id="pdShowStart" checked /> Start Time</label>
+            <label style="font-size:12px;display:flex;align-items:center;gap:6px"><input type="checkbox" id="pdShowRoom" checked /> Room</label>
+            <label style="font-size:12px;display:flex;align-items:center;gap:6px"><input type="checkbox" id="pdShowBreaks" checked /> Breaks</label>
+          </fieldset>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start;justify-content:flex-start;padding-top:4px">
+            <button type="submit" class="toggle" style="height:36px">Save</button>
+            <span id="pdStatus" style="font-size:12px;color:var(--muted)"></span>
+          </div>
+        </form>
+        <hr style="margin:24px 0 18px;border:none;border-top:1px solid var(--border)" />
+        <h3 style="margin:0 0 8px;font-size:16px">Doctor Posters (Patient Display)</h3>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Upload or replace the full-screen patient display picture for each doctor. These images appear as the background in the patient slideshow. Recommended ratio 9:16 (portrait) or large landscape that still centers doctor.</div>
+        <div id="posterManager" style="display:flex;flex-direction:column;gap:10px"></div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Doctor modal (used for Add and Edit) -->
+  <div id="doctorModal" class="modal" aria-hidden="true" style="display:none">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card" style="width:min(720px,92vw)">
+      <div class="modal-head">
+        <div class="title" id="doctorModalTitle">Edit Doctor</div>
+        <button class="close" data-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form">
+          <input name="id" type="hidden" />
+          
+          <h4 style="margin:0 0 12px;color:var(--primary);font-size:14px;text-transform:uppercase">Basic Information</h4>
+          <label>Name<input name="name" required /></label>
+          <label>Specialty
+            <div style="display:flex;gap:6px;align-items:center">
+              <select name="specialty" id="specSelect" required style="flex:1"></select>
+              <button type="button" id="openSpecManager" title="Add/Rename specialties" style="padding:8px 10px">＋</button>
+            </div>
+          </label>
+          <label>Designation<input name="designation" placeholder="e.g. Consultant Physician, Specialist" /></label>
+          
+          
+          <h4 style="margin:18px 0 12px;color:var(--primary);font-size:14px;text-transform:uppercase">Qualifications & Achievements</h4>
+          <label>Qualifications & Bio<textarea name="notes" rows="4" placeholder="Education, certifications, specializations, awards, etc."></textarea></label>
+          
+          <!-- Fancy Save Button at Bottom -->
+          <div style="margin-top:32px;padding-top:24px;border-top:2px solid var(--border)">
+            <button type="submit" style="width:100%;background:linear-gradient(135deg, #10b981, #34e89e);color:#ffffff;padding:16px 24px;border:none;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 6px 20px rgba(16,185,129,0.4);transition:all 0.3s ease;letter-spacing:0.5px;text-transform:uppercase;position:relative;overflow:hidden">
+              <span style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:10px">
+                <span style="font-size:20px">✓</span>
+                <span>Save Doctor</span>
+              </span>
+            </button>
+          </div>
+        </form>
+        <div id="photoWrap">
+          <h3>Profile Photo</h3>
+          <form id="photo-form">
+            <input id="file-input" type="file" name="file" accept="image/*" style="display:none" />
+            <label for="file-input" class="file-btn">Choose Image</label>
+            <span id="file-name" class="file-name">No file chosen</span>
+            <button type="submit">Upload</button>
+          </form>
+        </div>
+        <div id="promoWrap" style="margin-top:20px">
+          <h3>Promotional Poster (Patient Display)</h3>
+          <p style="font-size:12px;color:var(--muted);margin:4px 0 8px">Full-screen background image for patient slideshow</p>
+          <form id="promo-form">
+            <input id="promo-file-input" type="file" name="file" accept="image/*" style="display:none" />
+            <label for="promo-file-input" class="file-btn">Choose Poster Image</label>
+            <span id="promo-file-name" class="file-name">No file chosen</span>
+            <button type="submit">Upload</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Holiday modal enhanced for batch -->
+  <div id="holidayModal" class="modal" aria-hidden="true" style="display:none">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card" style="width:min(600px,92vw)">
+      <div class="modal-head">
+        <div class="title">Add / Edit Closed Days</div>
+        <button class="close" data-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <label style="display:block;margin-bottom:6px">Reason
+          <input id="holidayReason" placeholder="TODAY IS A OPD CLOSED DAY" />
+        </label>
+        <div class="day-picker-grid" id="dayPickerGrid"></div>
+        <div class="inline-note">Click days to toggle selection (up to 60 days ahead). Red = already closed.</div>
+        <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
+          <button id="holidaySaveBtn">Save Selected</button>
+          <button data-close>Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Telegram log -->
+  <div id="tglogModal" class="modal" aria-hidden="true" style="display:none">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="title">Telegram Log</div>
+        <button class="close" data-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <pre class="modal-log" id="tglogModalBody">Loading…</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Specialty manager modal -->
+  <div id="specModal" class="modal" aria-hidden="true" style="display:none">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card" style="width:min(560px,92vw)">
+      <div class="modal-head">
+        <div class="title">Specialties</div>
+        <button class="close" data-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; gap:8px; align-items:center; margin-bottom:10px">
+          <button id="openAddSpecPopup">+ Add Specialty</button>
+        </div>
+        <ul id="specListModal" style="margin:0; padding-left:18px"></ul>
+        <div style="color:var(--muted); font-size:12px; margin-top:8px">Rename by clicking edit icon; delete only if unused.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Specialty Popup (sub-modal) -->
+  <div id="specAddModal" class="modal" aria-hidden="true" style="display:none">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card" style="width:min(460px,92vw)">
+      <div class="modal-head">
+        <div class="title">Add Specialty</div>
+        <button class="close" data-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <label>Specialty Name<input id="newSpecName" placeholder="e.g. Orthopaedics" /></label>
+        <label>Default Designation<input id="newSpecDesignation" placeholder="e.g. Specialist, Consultant" /></label>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px">
+          <button id="addSpecBtn">Add</button>
+          <button data-close>Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schedule upload modal -->
+  <!-- Template Generation Modal (Optional Helper) -->
+  <div id="templateGenModal" class="modal" aria-hidden="true" style="display:none">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card" style="width:min(560px,92vw)">
+      <div class="modal-head">
+        <div class="title">📄 Generate Excel Template</div>
+        <button class="close" data-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:12px;line-height:1.5;color:var(--muted);margin-bottom:16px">Generate a pre-populated Excel template with all doctors listed for a date range. Fill in the schedule details and upload via Stage 1.</p>
+        <div style="background:rgba(59,130,246,0.08);border-left:3px solid #3b82f6;padding:12px;border-radius:6px;margin-bottom:16px;font-size:11px;color:var(--muted)">
+          <strong>Excel Columns Required:</strong> Date, Doctor, Start Time, Room, Total Patients, Before Break OPD Patients, Breaks, After Break OPD Patients
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px">
+          <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end">
+            <label style="font-size:12px;display:flex;flex-direction:column;flex:1;min-width:140px;position:relative">
+              <span style="font-weight:700;margin-bottom:6px">Start Date</span>
+              <span style="position:absolute;right:12px;bottom:12px;font-size:22px;pointer-events:none;z-index:1">📅</span>
+              <input type="date" id="tmplStart" style="padding:10px 40px 10px 10px;border:2px solid rgba(59,130,246,0.3);border-radius:8px;background:var(--card);color:var(--text)" />
+            </label>
+            <label style="font-size:12px;display:flex;flex-direction:column;flex:1;min-width:140px;position:relative">
+              <span style="font-weight:700;margin-bottom:6px">End Date</span>
+              <span style="position:absolute;right:12px;bottom:12px;font-size:22px;pointer-events:none;z-index:1">📅</span>
+              <input type="date" id="tmplEnd" style="padding:10px 40px 10px 10px;border:2px solid rgba(59,130,246,0.3);border-radius:8px;background:var(--card);color:var(--text)" />
+            </label>
+          </div>          <label style="font-size:12px;display:flex;align-items:center;gap:8px">
+            <input type="checkbox" id="tmplGrouped" style="width:18px;height:18px" /> 
+            <span>Group by Date & Specialty</span>
+          </label>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button type="button" id="genTemplateBtn" style="background:linear-gradient(135deg, #3b82f6, #60a5fa);color:#ffffff;padding:12px 24px;border:none;border-radius:10px;font-weight:700;cursor:pointer">✓ Generate Template</button>
+          <a id="downloadRangeTemplate" href="#" download style="display:none;background:linear-gradient(135deg, #059669, #10b981);color:#ffffff;padding:12px 24px;border-radius:10px;font-weight:700;text-decoration:none">⬇ Download Template</a>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:12px">Range limit: 120 days. Only Date & Doctor columns are pre-filled.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clear Selected Date Confirmation Modal -->
+  <div id="clearDateModal" class="modal" style="display:none">
+    <div class="modal-backdrop" onclick="document.getElementById('clearDateModal').style.display='none'"></div>
+    <div class="modal-card" style="max-width:700px">
+      <div class="modal-head">
+        <div class="title">⚠️ Confirm Clear Selected Date</div>
+        <button class="close" onclick="document.getElementById('clearDateModal').style.display='none'">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="background:rgba(239,68,68,0.1);border:2px solid rgba(239,68,68,0.3);border-radius:12px;padding:16px;margin-bottom:20px">
+          <div style="font-size:18px;font-weight:800;color:#ef4444;margin-bottom:8px">⚠️ WARNING</div>
+          <div style="font-size:14px;color:#dc2626;font-weight:600;line-height:1.5">
+            This will permanently delete ALL schedules for <strong id="clearDateDisplay"></strong>
+          </div>
+        </div>
+        
+        <div style="margin-bottom:20px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)">📋 Schedules to be removed:</div>
+          <div id="clearDatePreview" style="max-height:400px;overflow-y:auto;background:var(--card);border:2px solid var(--border);border-radius:12px;padding:12px"></div>
+        </div>
+        
+        <div style="font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.5">
+          Note: This action cannot be undone. All doctor schedules, patient counts, and break information for this date will be permanently removed.
+        </div>
+        
+        <div style="display:flex;gap:12px;justify-content:flex-end">
+          <button onclick="document.getElementById('clearDateModal').style.display='none'" style="background:var(--card);border:2px solid var(--border);padding:12px 24px;border-radius:10px;font-weight:700;cursor:pointer;color:var(--text)">Cancel</button>
+          <button id="confirmClearDateBtn" style="background:linear-gradient(135deg, #ef4444, #dc2626);color:#fff;padding:12px 24px;border:none;border-radius:10px;font-weight:700;cursor:pointer">🗑️ Yes, Clear Date</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/admin.js"></script>
+  <script>
+    // window.token retained for backward compatibility with legacy token-only APIs
+    window.token = '{{ admin_token }}';
+    (function(){
+      const btn = document.getElementById('logoutBtn');
+      if(btn){ btn.onclick = async ()=>{ try{ await fetch('/logout',{method:'POST'}); location.href='/login'; }catch(e){ location.href='/login'; } }; }
+      // Load branding for topbar logo
+      const brandImg = document.getElementById('brandLogoSmall');
+      if(brandImg){
+        fetch('/api/branding').then(r=>r.json()).then(d=>{
+          if(d && d.logo){ brandImg.src = d.logo + '?t=' + Date.now(); brandImg.style.display='block'; }
+        }).catch(()=>{});
+      }
+    })();
+  </script>
+
+  <!-- WINDOWS EXPLORER-STYLE FILE MANAGER MODAL -->
+  <div id="fileManagerModal" class="fm-modal">
+    <div class="fm-modal-window">
+      <!-- Title Bar -->
+      <div class="fm-titlebar">
+        <div class="fm-titlebar-left">
+          <span class="fm-titlebar-icon">📂</span>
+          <span class="fm-titlebar-title">File Manager - Schedule Uploads</span>
+        </div>
+        <div class="fm-titlebar-controls">
+          <button class="fm-titlebar-btn" id="fmMinimizeBtn" onclick="window.fmMinimize && window.fmMinimize()" title="Minimize">─</button>
+          <button class="fm-titlebar-btn" id="fmMaximizeBtn" onclick="window.fmMaximize && window.fmMaximize()" title="Maximize">□</button>
+          <button class="fm-titlebar-btn fm-close-btn" id="fmCloseBtn" onclick="window.fmClose && window.fmClose()" title="Close">✕</button>
+        </div>
+      </div>
+
+      <!-- Toolbar with organized buttons -->
+      <div class="fm-toolbar">
+        <div class="fm-toolbar-section">
+          <button id="fmUpBtn" class="fm-toolbar-btn" onclick="window.fmGoUp && window.fmGoUp()" title="Up one level">
+            <span class="fm-btn-icon">⬆️</span>
+            <span class="fm-btn-label">Up</span>
+          </button>
+        </div>
+        <div class="fm-toolbar-separator"></div>
+        <div class="fm-toolbar-section">
+          <button id="fmNewFolderBtn" class="fm-toolbar-btn" onclick="window.fmNewFolder && window.fmNewFolder()" title="New folder">
+            <span class="fm-btn-icon">📁</span>
+            <span class="fm-btn-label">New Folder</span>
+          </button>
+          <button id="fmUploadBtn" class="fm-toolbar-btn" onclick="window.fmUpload && window.fmUpload()" title="Upload files">
+            <span class="fm-btn-icon">📤</span>
+            <span class="fm-btn-label">Upload</span>
+          </button>
+          <input type="file" id="fmFileInput" multiple accept=".xlsx,.xls" style="display:none" onchange="window.fmHandleUpload && window.fmHandleUpload()" />
+        </div>
+        <div class="fm-toolbar-separator"></div>
+        <div class="fm-toolbar-section">
+          <button id="fmRefreshBtn" class="fm-toolbar-btn" onclick="window.fileManagerLoadFiles && window.fileManagerLoadFiles()" title="Refresh">
+            <span class="fm-btn-icon">🔄</span>
+            <span class="fm-btn-label">Refresh</span>
+          </button>
+        </div>
+        <div class="fm-toolbar-spacer"></div>
+        <div class="fm-toolbar-section">
+          <!-- View Mode Dropdown -->
+          <div class="fm-view-dropdown">
+            <button id="fmViewBtn" class="fm-toolbar-btn" title="Change view" onclick="window.toggleViewMenu(event)">
+              <span class="fm-btn-icon">☰</span>
+              <span class="fm-btn-label">View</span>
+              <span class="fm-btn-arrow">▼</span>
+            </button>
+            <div id="fmViewMenu" class="fm-view-menu" style="display:none">
+              <div class="fm-view-menu-item" data-view="extra-large" onclick="window.changeViewMode('extra-large')">
+                <span class="fm-view-icon">⬜</span>
+                <span>Extra large icons</span>
+              </div>
+              <div class="fm-view-menu-item" data-view="large" onclick="window.changeViewMode('large')">
+                <span class="fm-view-icon">🔲</span>
+                <span>Large icons</span>
+              </div>
+              <div class="fm-view-menu-item" data-view="medium" onclick="window.changeViewMode('medium')">
+                <span class="fm-view-icon">▫️</span>
+                <span>Medium icons</span>
+              </div>
+              <div class="fm-view-menu-item" data-view="small" onclick="window.changeViewMode('small')">
+                <span class="fm-view-icon">▪️</span>
+                <span>Small icons</span>
+              </div>
+              <div class="fm-view-menu-divider"></div>
+              <div class="fm-view-menu-item active" data-view="list" onclick="window.changeViewMode('list')">
+                <span class="fm-view-icon">☰</span>
+                <span>List</span>
+              </div>
+              <div class="fm-view-menu-item" data-view="details" onclick="window.changeViewMode('details')">
+                <span class="fm-view-icon">≡</span>
+                <span>Details</span>
+              </div>
+              <div class="fm-view-menu-item" data-view="tiles" onclick="window.changeViewMode('tiles')">
+                <span class="fm-view-icon">▦</span>
+                <span>Tiles</span>
+              </div>
+              <div class="fm-view-menu-item" data-view="content" onclick="window.changeViewMode('content')">
+                <span class="fm-view-icon">📄</span>
+                <span>Content</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Address Bar -->
+      <div class="fm-addressbar">
+        <div class="fm-addressbar-label">📍</div>
+        <div class="fm-addressbar-path" id="fmBreadcrumb">/</div>
+        <input type="text" class="fm-addressbar-input" id="fmAddressInput" style="display:none" />
+        <button class="fm-addressbar-refresh" id="fmAddressRefresh" title="Refresh">↻</button>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="fm-searchbar">
+        <input type="text" id="fmSearch" class="fm-search-input" placeholder="� Search in current folder" />
+      </div>
+
+      <!-- Main Content Area with Explorer Layout -->
+      <div class="fm-main-container">
+        <!-- File/Folder Content Area -->
+        <div id="fmContentArea" class="fm-content-area fm-view-list">
+          <!-- Dynamic content here -->
+        </div>
+      </div>
+
+      <!-- Status Bar -->
+      <div class="fm-statusbar">
+        <div class="fm-statusbar-left">
+          <span id="fmItemCount">0 items</span>
+        </div>
+        <div class="fm-statusbar-right">
+          <span id="fmStatusText">Ready</span>
+          <span id="fmSelectionInfo" style="display:none"></span>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="fm-action-footer">
+        <div class="fm-footer-info">
+          <span id="fmSelectedFileName">No file selected</span>
+        </div>
+        <div class="fm-footer-buttons">
+          <button id="fmSelectBtn" class="fm-action-btn fm-btn-primary" onclick="window.fmSelectFile && window.fmSelectFile()">Select</button>
+          <button id="fmCancelBtn" class="fm-action-btn fm-btn-cancel" onclick="window.fmClose && window.fmClose()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drag Overlay -->
+    <div id="fmDragOverlay" class="fm-drag-overlay" style="display:none">
+      <div class="fm-drag-content">
+        <div class="fm-drag-icon">📦</div>
+        <div class="fm-drag-text">Drop to move here</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILE CONTEXT MENU -->
+  <div id="fmContextMenu" class="fm-context-menu" style="display:none">
+    <div class="fm-context-item" data-action="open"><span class="fm-ctx-icon">📂</span> Open</div>
+    <div class="fm-context-item" data-action="select"><span class="fm-ctx-icon">✓</span> Select</div>
+    <div class="fm-context-separator"></div>
+    <div class="fm-context-item" data-action="preview"><span class="fm-ctx-icon">👁️</span> Preview</div>
+    <div class="fm-context-item" data-action="download"><span class="fm-ctx-icon">⬇️</span> Download</div>
+    <div class="fm-context-separator"></div>
+    <div class="fm-context-item" data-action="rename"><span class="fm-ctx-icon">✏️</span> Rename</div>
+    <div class="fm-context-item" data-action="cut"><span class="fm-ctx-icon">✂️</span> Cut</div>
+    <div class="fm-context-item" data-action="copy"><span class="fm-ctx-icon">📋</span> Copy</div>
+    <div class="fm-context-separator"></div>
+    <div class="fm-context-item fm-context-danger" data-action="delete"><span class="fm-ctx-icon">🗑️</span> Delete</div>
+  </div>
+
+  <script>
+    // Verify File Manager functions are loaded
+    console.log('Checking File Manager functions...');
+    console.log('window.openFileManager:', typeof window.openFileManager);
+    console.log('window.toggleViewMenu:', typeof window.toggleViewMenu);
+    console.log('window.changeViewMode:', typeof window.changeViewMode);
+    
+    // Test button connectivity
+    setTimeout(() => {
+      const btn = document.getElementById('openFileManagerBtn');
+      if(btn) {
+        console.log('Open File Manager button found!');
+        console.log('Button onclick:', btn.onclick);
+      } else {
+        console.error('Open File Manager button NOT found!');
+      }
+    }, 100);
+  </script>
+  <script src="{{ url_for('static', filename='js/shift_knowledge_categorized.js') }}"></script>
+  
+  {# AI Assistant / PR bot is intentionally not loaded on the Doctors Schedule Portal #}
+
+</body>
+</html>

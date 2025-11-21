@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PR Schedule - Full View</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --panel: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --hover: #f1f5f9;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #64748b, #475569);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .schedule-container {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+
+        th, td {
+            padding: 14px;
+            border: 2px solid var(--border);
+            text-align: center;
+            font-size: 13px;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th:first-child {
+            text-align: left;
+            position: sticky;
+            left: 0;
+            z-index: 11;
+        }
+
+        td:first-child {
+            background: var(--panel);
+            font-weight: 700;
+            text-align: left;
+            position: sticky;
+            left: 0;
+            z-index: 9;
+            cursor: pointer;
+        }
+
+        td:first-child:hover {
+            background: var(--hover);
+        }
+
+        td {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        td:not(:first-child):hover {
+            background: var(--hover);
+            transform: scale(1.05);
+        }
+
+        .friday-closed {
+            background: linear-gradient(135deg, #fed7aa 0%, #fecaca 100%);
+            border: 2px solid #fb923c;
+        }
+
+        .closed-day {
+            background: linear-gradient(135deg, #fed7aa 0%, #fecaca 100%);
+            border: 2px solid #fb923c;
+            position: relative;
+        }
+
+        .closed-overlay::after {
+            content: '🕌';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .leave-al {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .leave-sl {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .leave-ml {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .leave-cl {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1 id="scheduleTitle">Schedule: Loading...</h1>
+            <p style="color: var(--text-muted); margin-top: 4px;">Monthly roster from 16th to 15th</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-secondary" onclick="prevRoster()">◀ Prev</button>
+            <button class="btn btn-secondary" onclick="nextRoster()">Next ▶</button>
+            <button class="btn btn-success" onclick="exportRoster()">📥 Export</button>
+            <button class="btn btn-primary" onclick="window.close()">✕ Close</button>
+        </div>
+    </div>
+
+    <div class="schedule-container">
+        <table id="rosterTable">
+            <thead>
+                <tr>
+                    <th style="min-width: 150px;">Staff Name</th>
+                </tr>
+            </thead>
+            <tbody id="rosterBody">
+                <tr>
+                    <td colspan="100" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                        Loading schedule data...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Edit Cell Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="editCellTitle">Edit Assignment</div>
+            <div class="form-group">
+                <label>Station Assignment</label>
+                <select id="editCellStation" class="form-select">
+                    <option value="">-- No Assignment --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Leave Type</label>
+                <select id="editCellLeave" class="form-select">
+                    <option value="">-- No Leave --</option>
+                    <option value="AL">Annual Leave (AL)</option>
+                    <option value="SL">Sick Leave (SL)</option>
+                    <option value="ML">Maternity Leave (ML)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <input type="text" id="editCellNotes" class="form-input" placeholder="Optional notes">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-success" onclick="saveCell()">💾 Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let state = {
+            staff: [],
+            stations: { clinical: [], front: [] },
+            customNames: { clinical: {}, front: {} },
+            roster: {},
+            leaves: {},
+            closures: {},
+            currentMonth: new Date(),
+            editingCell: null
+        };
+
+        async function init() {
+            await loadData();
+            renderSchedule();
+        }
+
+        async function loadData() {
+            try {
+                const [staffRes, stationsRes, rosterRes, leavesRes, closuresRes] = await Promise.all([
+                    fetch('/api/pr/staff'),
+                    fetch('/api/pr/stations'),
+                    fetch('/api/pr/roster/all'),
+                    fetch('/api/pr/leaves/all'),
+                    fetch('/api/closures')
+                ]);
+                
+                if (staffRes.ok) {
+                    const data = await staffRes.json();
+                    state.staff = data.staff || [];
+                }
+                if (stationsRes.ok) {
+                    const data = await stationsRes.json();
+                    state.stations = data.stations || { clinical: [], front: [] };
+                    state.customNames = data.station_custom_names || { clinical: {}, front: {} };
+                }
+                if (rosterRes.ok) state.roster = await rosterRes.json();
+                if (leavesRes.ok) state.leaves = await leavesRes.json();
+                if (closuresRes.ok) {
+                    const data = await closuresRes.json();
+                    state.closures = data.closures || {};
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showNotification('Error loading data', 'danger');
+            }
+        }
+
+        function getRosterPeriod(date) {
+            const d = new Date(date);
+            const day = d.getDate();
+            if (day >= 16) {
+                const startMonth = d.getMonth();
+                const startYear = d.getFullYear();
+                const endMonth = (startMonth + 1) % 12;
+                const endYear = endMonth === 0 ? startYear + 1 : startYear;
+                return {
+                    start: new Date(startYear, startMonth, 16),
+                    end: new Date(endYear, endMonth, 15),
+                    label: `${getMonthName(startMonth)} 16 - ${getMonthName(endMonth)} 15, ${startYear}`
+                };
+            } else {
+                const endMonth = d.getMonth();
+                const endYear = d.getFullYear();
+                const startMonth = endMonth === 0 ? 11 : endMonth - 1;
+                const startYear = startMonth === 11 ? endYear - 1 : endYear;
+                return {
+                    start: new Date(startYear, startMonth, 16),
+                    end: new Date(endYear, endMonth, 15),
+                    label: `${getMonthName(startMonth)} 16 - ${getMonthName(endMonth)} 15, ${startYear}`
+                };
+            }
+        }
+
+        function getMonthName(month) {
+            return ['January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'][month];
+        }
+
+        function prevRoster() {
+            state.currentMonth.setMonth(state.currentMonth.getMonth() - 1);
+            renderSchedule();
+        }
+
+        function nextRoster() {
+            state.currentMonth.setMonth(state.currentMonth.getMonth() + 1);
+            renderSchedule();
+        }
+
+        function renderSchedule() {
+            const period = getRosterPeriod(state.currentMonth);
+            document.getElementById('scheduleTitle').textContent = `Schedule: ${period.label}`;
+            
+            const dates = [];
+            let currentDate = new Date(period.start);
+            while (currentDate <= period.end) {
+                dates.push(new Date(currentDate));
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            const thead = document.querySelector('#rosterTable thead tr');
+            thead.innerHTML = '<th style="min-width: 150px;">Staff Name</th>';
+            dates.forEach(date => {
+                const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()];
+                const dateNum = date.getDate();
+                const isFriday = date.getDay() === 5;
+                const dateStr = date.toISOString().split('T')[0];
+                const isClosed = state.closures[dateStr] || isFriday;
+                thead.innerHTML += `
+                    <th style="min-width: 90px; background: ${isClosed ? 'linear-gradient(135deg, #fed7aa, #fecaca)' : 'var(--primary)'}; ${isClosed ? 'border: 2px solid #fb923c;' : ''}">
+                        <div>${dayName}</div>
+                        <div style="font-size: 16px;">${dateNum}</div>
+                        ${isFriday ? '<div style="font-size:20px;margin-top:4px">🕌</div>' : ''}
+                    </th>
+                `;
+            });
+
+            const tbody = document.getElementById('rosterBody');
+            tbody.innerHTML = '';
+            
+            state.staff.filter(s => s.active !== false).forEach(staff => {
+                const row = document.createElement('tr');
+                const nameCell = document.createElement('td');
+                nameCell.innerHTML = `<div style="display: flex; align-items: center; gap: 8px;">
+                    <span>${staff.role === 'clinical' ? '🏥' : '🎯'}</span>
+                    <span>${staff.name}</span>
+                </div>`;
+                row.appendChild(nameCell);
+
+                dates.forEach(date => {
+                    const dateStr = date.toISOString().split('T')[0];
+                    const assignment = state.roster[staff.id]?.[dateStr] || {};
+                    const isFriday = date.getDay() === 5;
+                    const isClosed = state.closures[dateStr] || isFriday;
+                    
+                    const cell = document.createElement('td');
+                    if (isClosed) {
+                        cell.classList.add('closed-day');
+                        if (isFriday) cell.classList.add('closed-overlay');
+                    }
+                    
+                    if (assignment.leave) {
+                        cell.classList.add(`leave-${assignment.leave.toLowerCase()}`);
+                        cell.textContent = assignment.leave;
+                    } else if (assignment.station) {
+                        const stationName = getStationName(assignment.station);
+                        cell.textContent = stationName;
+                        cell.style.color = 'var(--primary)';
+                        cell.style.fontWeight = '600';
+                    } else {
+                        cell.textContent = '--';
+                        cell.style.color = 'var(--text-muted)';
+                    }
+                    
+                    cell.onclick = () => editCell(staff.id, staff.name, dateStr);
+                    row.appendChild(cell);
+                });
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function getStationName(stationId) {
+            if (state.customNames.clinical[stationId]) return state.customNames.clinical[stationId];
+            if (state.customNames.front[stationId]) return state.customNames.front[stationId];
+            const clinical = state.stations.clinical.find(s => s.id === stationId);
+            if (clinical) return clinical.name.substring(0, 8);
+            const front = state.stations.front.find(s => s.id === stationId);
+            if (front) return front.name.substring(0, 8);
+            return stationId;
+        }
+
+        function editCell(staffId, staffName, date) {
+            state.editingCell = { staffId, staffName, date };
+            document.getElementById('editCellTitle').textContent = `Edit: ${staffName} - ${date}`;
+            
+            const stationSelect = document.getElementById('editCellStation');
+            stationSelect.innerHTML = '<option value="">-- No Assignment --</option>';
+            state.stations.clinical.forEach(s => {
+                stationSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+            });
+            state.stations.front.forEach(s => {
+                stationSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+            });
+            
+            const existing = state.roster[staffId]?.[date] || {};
+            document.getElementById('editCellStation').value = existing.station || '';
+            document.getElementById('editCellLeave').value = existing.leave || '';
+            document.getElementById('editCellNotes').value = existing.notes || '';
+            
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        async function saveCell() {
+            const { staffId, date } = state.editingCell;
+            const station = document.getElementById('editCellStation').value;
+            const leave = document.getElementById('editCellLeave').value;
+            const notes = document.getElementById('editCellNotes').value;
+            
+            if (!state.roster[staffId]) state.roster[staffId] = {};
+            state.roster[staffId][date] = { station, leave, notes };
+            
+            try {
+                await fetch('/api/pr/roster/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        staff_id: staffId, 
+                        date: date, 
+                        assignment: { station, leave, notes } 
+                    })
+                });
+                
+                if (leave) {
+                    const staff = state.staff.find(s => s.id === staffId);
+                    if (!state.leaves[date]) state.leaves[date] = [];
+                    state.leaves[date] = state.leaves[date].filter(l => l.staff_id !== staffId);
+                    if (staff) {
+                        state.leaves[date].push({ 
+                            staff_id: staffId, 
+                            staff_name: staff.name, 
+                            leave_type: leave, 
+                            notes: notes 
+                        });
+                    }
+                    await fetch('/api/pr/leaves/update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(state.leaves)
+                    });
+                }
+                
+                renderSchedule();
+                closeModal();
+                showNotification('Assignment saved successfully', 'success');
+            } catch (error) {
+                console.error('Error saving:', error);
+                showNotification('Error saving assignment', 'danger');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        function exportRoster() {
+            const period = getRosterPeriod(state.currentMonth);
+            window.open(`/api/pr/roster/export?start=${period.start.toISOString().split('T')[0]}&end=${period.end.toISOString().split('T')[0]}`, '_blank');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style.background = type === 'success' ? 
+                'linear-gradient(135deg, #10b981, #059669)' : 
+                'linear-gradient(135deg, #ef4444, #dc2626)';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        init();
+    </script>
+</body>
+</html>

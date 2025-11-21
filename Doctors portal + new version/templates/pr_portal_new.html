@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PR Portal - Modern Interface</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pr_portal.css') }}">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #0f172a;
+            --panel: #1e293b;
+            --card: #334155;
+            --border: #475569;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); }
+        
+        .app-container { display: flex; height: 100vh; }
+        
+        /* Modern Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--panel);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px;
+        }
+        
+        .nav-item {
+            width: 100%;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            text-align: left;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        
+        .nav-item:hover { background: var(--card); }
+        .nav-item.active { background: var(--primary); font-weight: 600; }
+        .nav-item .icon { font-size: 18px; }
+        
+        .sidebar-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--bg);
+        }
+        
+        .view-panel {
+            display: none;
+            padding: 32px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .view-panel.active { display: block; }
+        
+        .view-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+        
+        .view-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .view-description {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary { background: var(--card); color: var(--text); }
+        .btn-secondary:hover { background: var(--border); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        
+        /* Modern Cards */
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .card h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+        
+        /* Search and Filter Bar */
+        .toolbar {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+        }
+        
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .view-mode-switcher {
+            display: flex;
+            gap: 4px;
+            background: var(--bg);
+            padding: 4px;
+            border-radius: 8px;
+        }
+        
+        .view-mode-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .view-mode-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Grid Layouts */
+        .grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        /* Staff Card */
+        .staff-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .staff-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+        }
+        
+        .staff-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        
+        .staff-avatar {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .staff-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .staff-role {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--card);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .staff-role.clinical { background: #3b82f620; color: #3b82f6; }
+        .staff-role.front { background: #8b5cf620; color: #8b5cf6; }
+        .staff-role.training { background: #f59e0b20; color: #f59e0b; }
+        
+        .staff-stations {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .station-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        
+        .station-tag {
+            padding: 4px 10px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 11px;
+        }
+        
+        /* List View Style */
+        .staff-list-item {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.2s;
+        }
+        
+        .staff-list-item:hover {
+            border-color: var(--primary);
+            background: var(--card);
+        }
+        
+        .staff-list-info {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 2fr 1fr 3fr 120px;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active { display: flex; }
+        
+        .modal-content {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+        }
+        
+        /* Month Calendar */
+        .calendar-container {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            padding: 12px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        
+        .calendar-day {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            min-height: 100px;
+            padding: 8px;
+            transition: all 0.2s;
+        }
+        
+        .calendar-day:hover {
+            border-color: var(--primary);
+            background: var(--card);
+        }
+        
+        .day-number {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .day-staff-count {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        
+        /* Schedule View Table */
+        .schedule-table {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .schedule-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .schedule-table th {
+            background: var(--card);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .schedule-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+        
+        .schedule-table tr:hover {
+            background: var(--card);
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🏥 PR Portal</h2>
+                <p class="subtitle">Patient Relations Management</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-view="dashboard">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" data-view="schedule-view">
+                    <span class="icon">📅</span>
+                    <span>Schedule Viewer</span>
+                </button>
+                <button class="nav-item" data-view="month-view">
+                    <span class="icon">🗓️</span>
+                    <span>Month Overview</span>
+                </button>
+                <button class="nav-item" data-view="staff-management">
+                    <span class="icon">👥</span>
+                    <span>Staff Management</span>
+                </button>
+                <button class="nav-item" data-view="ai-knowledge">
+                    <span class="icon">🤖</span>
+                    <span>AI Knowledge</span>
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="/admin" class="back-link">← Back to Admin</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <div id="dashboard-view" class="view-panel active">
+                <div class="view-header">
+                    <div>
+                        <h1>Dashboard</h1>
+                        <p class="view-description">Overview of PR staff roster and operations</p>
+                    </div>
+                    <div class="header-actions">
+                        <button id="refreshDashBtn" class="btn btn-secondary">
+                            <span>🔄</span> Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-label">Total Staff</div>
+                        <div class="stat-value" id="statTotalStaff">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏥</div>
+                        <div class="stat-label">Clinical Staff</div>
+                        <div class="stat-value" id="statClinical">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-label">Front Staff</div>
+                        <div class="stat-value" id="statFront">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-label">In Training</div>
+                        <div class="stat-value" id="statTraining">0</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Quick Actions</h3>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
+                        <button class="btn btn-primary" onclick="switchView('schedule-view')">
+                            📅 View Schedules
+                        </button>
+                        <button class="btn btn-primary" onclick="switchView('staff-management')">
+                            👥 Manage Staff
+                        </button>
+                        <button class="btn btn-secondary" onclick="switchView('ai-knowledge')">
+                            🤖 Configure AI
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule Viewer (Separate Tab) -->
+            <div id="schedule-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>📅 Schedule Viewer</h1>
+                        <p class="view-description">Modern view of staff schedules with search and filters</p>
+                    </div>
+                    <div class="header-actions">
+                        <button id="exportScheduleBtn" class="btn btn-secondary">
+                            <span>📥</span> Export
+                        </button>
+                        <button id="clearScheduleBtn" class="btn btn-danger">
+                            <span>🗑️</span> Clear Schedule
+                        </button>
+                    </div>
+                </div>
+
+                <div class="toolbar">
+                    <div class="search-box">
+                        <input type="text" id="scheduleSearchInput" placeholder="Search by staff name, role, or station...">
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <input type="date" id="scheduleFilterDate" class="form-input" style="width: auto;">
+                    </div>
+                    <button class="btn btn-primary" id="loadScheduleViewBtn">
+                        Load Schedule
+                    </button>
+                </div>
+
+                <div id="scheduleViewContainer">
+                    <!-- Schedule content will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Month View (Modern, View-Only) -->
+            <div id="month-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>🗓️ Month Overview</h1>
+                        <p class="view-description">Bird's eye view of entire month roster - view only</p>
+                    </div>
+                    <div class="header-actions">
+                        <button id="exportMonthBtn" class="btn btn-secondary">
+                            <span>📥</span> Export Month
+                        </button>
+                    </div>
+                </div>
+
+                <div class="toolbar">
+                    <div class="search-box">
+                        <input type="text" id="monthSearchInput" placeholder="Search staff...">
+                    </div>
+                    <select id="roleFilterSelect" class="form-select" style="width: auto;">
+                        <option value="">All Roles</option>
+                        <option value="clinical">Clinical</option>
+                        <option value="front">Front</option>
+                        <option value="training">Training</option>
+                    </select>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-secondary" id="prevMonthBtn">◄ Previous</button>
+                        <select id="monthSelect" class="form-select" style="width: 140px;">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <input type="number" id="yearInput" class="form-input" min="2020" max="2030" value="2025" style="width: 100px;">
+                        <button class="btn btn-secondary" id="nextMonthBtn">Next ►</button>
+                    </div>
+                    <button class="btn btn-primary" id="loadMonthViewBtn">
+                        Load Month
+                    </button>
+                </div>
+
+                <div id="monthViewContainer" class="calendar-container" style="display: none;">
+                    <div class="calendar-header">
+                        <h3 id="monthViewTitle">November 2025</h3>
+                        <div id="monthStats"></div>
+                    </div>
+                    <div class="calendar-grid" id="monthCalendarGrid">
+                        <!-- Calendar will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staff Management (Modern with Card/List/Table Views) -->
+            <div id="staff-management-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>👥 Staff Management</h1>
+                        <p class="view-description">Versatile staff directory with multiple view modes</p>
+                    </div>
+                    <div class="header-actions">
+                        <button id="addStaffBtn" class="btn btn-primary">
+                            <span>➕</span> Add Staff
+                        </button>
+                    </div>
+                </div>
+
+                <div class="toolbar">
+                    <div class="search-box">
+                        <input type="text" id="staffSearchInput" placeholder="Search staff by name, role, or station...">
+                    </div>
+                    <select id="staffRoleFilter" class="form-select" style="width: auto;">
+                        <option value="">All Roles</option>
+                        <option value="clinical">Clinical</option>
+                        <option value="front">Front</option>
+                        <option value="training">Training</option>
+                    </select>
+                    <div class="view-mode-switcher">
+                        <button class="view-mode-btn active" data-mode="grid">
+                            Grid
+                        </button>
+                        <button class="view-mode-btn" data-mode="list">
+                            List
+                        </button>
+                        <button class="view-mode-btn" data-mode="table">
+                            Table
+                        </button>
+                    </div>
+                </div>
+
+                <div id="staffContainer" class="grid-view">
+                    <!-- Staff cards/list will be rendered here -->
+                </div>
+            </div>
+
+            <!-- AI Knowledge (All-in-One: GOPD, Custom Names, Shift Knowledge, OPD Integration) -->
+            <div id="ai-knowledge-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>🤖 AI Knowledge</h1>
+                        <p class="view-description">Configure AI duty generation with GOPD, custom names, shift knowledge, and OPD integration</p>
+                    </div>
+                </div>
+
+                <!-- GOPD Configuration -->
+                <div class="card">
+                    <h3>🏥 GOPD Configuration</h3>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+                        Configure General OPD staffing for public holidays
+                    </p>
+                    
+                    <div class="form-group">
+                        <label>Number of GOPD Staff Required:</label>
+                        <input type="number" id="gopdStaffCount" class="form-input" min="1" max="10" value="2">
+                    </div>
+
+                    <div class="form-group">
+                        <label>GOPD Shifts:</label>
+                        <div id="gopdShiftsList" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px;">
+                            <!-- Shifts will be rendered here -->
+                        </div>
+                        <button id="addGopdShiftBtn" class="btn btn-secondary">
+                            <span>➕</span> Add Shift
+                        </button>
+                    </div>
+
+                    <button id="saveGopdConfigBtn" class="btn btn-success">
+                        <span>💾</span> Save GOPD Configuration
+                    </button>
+                </div>
+
+                <!-- Custom Station Names -->
+                <div class="card">
+                    <h3>✏️ Custom Station Names</h3>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+                        Shorten long station names for better display (e.g., Orthopaedics → Ortho)
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div>
+                            <h4 style="margin-bottom: 12px;">Clinical Stations</h4>
+                            <div id="clinicalCustomNames" style="display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Clinical custom names will be rendered here -->
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 12px;">Front Stations</h4>
+                            <div id="frontCustomNames" style="display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Front custom names will be rendered here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="saveCustomNamesBtn" class="btn btn-success" style="margin-top: 20px;">
+                        <span>💾</span> Save Custom Names
+                    </button>
+                </div>
+
+                <!-- OPD Specialty Shift Knowledge -->
+                <div class="card">
+                    <h3>🧠 OPD Specialty Shift Knowledge</h3>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+                        Define shift timings and patient loads for each specialty to calculate staff duty times
+                    </p>
+                    
+                    <div id="specialtyKnowledgeContainer">
+                        <!-- Specialty knowledge entries will be rendered here -->
+                    </div>
+                    
+                    <button id="addSpecialtyBtn" class="btn btn-secondary">
+                        <span>➕</span> Add Specialty
+                    </button>
+                    <button id="saveShiftKnowledgeBtn" class="btn btn-success" style="margin-left: 12px;">
+                        <span>💾</span> Save Shift Knowledge
+                    </button>
+                </div>
+
+                <!-- AI Generation Rules -->
+                <div class="card">
+                    <h3>⚙️ AI Generation Rules</h3>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+                        Configure how AI calculates staff duty times based on doctor schedules
+                    </p>
+                    
+                    <div class="form-group">
+                        <label>Staff Start Time Offset (minutes before doctor):</label>
+                        <input type="number" id="staffStartOffset" class="form-input" value="30" min="0" max="120">
+                        <small style="color: var(--text-muted);">If doctor starts at 9:00 AM, staff will start at 8:30 AM</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>On-Call/Post-On Adjustments:</label>
+                        <div style="display: flex; gap: 12px;">
+                            <label style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="enableOnCallAdjust" checked>
+                                Enable automatic workload adjustment for on-call doctors
+                            </label>
+                        </div>
+                    </div>
+
+                    <button id="saveAiRulesBtn" class="btn btn-success">
+                        <span>💾</span> Save AI Rules
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Staff Modal -->
+    <div id="addStaffModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Staff Member</h2>
+                <button class="modal-close" onclick="closeModal('addStaffModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" id="staffNameInput" class="form-input" placeholder="Enter staff name">
+                </div>
+                <div class="form-group">
+                    <label>Role:</label>
+                    <select id="staffRoleInput" class="form-select">
+                        <option value="clinical">Clinical</option>
+                        <option value="front">Front</option>
+                        <option value="training">Training</option>
+                    </select>
+                </div>
+                <div class="form-group" id="stationsGroup">
+                    <label>Stations:</label>
+                    <div id="stationsCheckboxes" style="max-height: 200px; overflow-y: auto;">
+                        <!-- Checkboxes will be generated -->
+                    </div>
+                </div>
+                <div class="form-group" id="trainingAtGroup" style="display: none;">
+                    <label>Training At:</label>
+                    <select id="trainingAtInput" class="form-select">
+                        <!-- Options will be generated -->
+                    </select>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button class="btn btn-secondary" onclick="closeModal('addStaffModal')">Cancel</button>
+                    <button class="btn btn-primary" id="saveStaffBtn">Save Staff</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/pr_portal_new.js') }}"></script>
+</body>
+</html>

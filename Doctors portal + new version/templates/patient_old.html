@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Patient Display</title>
+  <link rel="stylesheet" href="/static/css/admin.css" />
+  <style>
+    /* Brighter palette for distance readability */
+    :root{
+      --bg:#ffffff;
+      --bgAlt:#f5fafc;
+      --bgGradA:#ffffff;
+      --bgGradB:#e8f6fb;
+      --bgGradC:#f3fcff;
+      --border:#d2e2e8;
+      --card:#ffffff;
+      --cardEdge:#e1edf2;
+      --cardInset:#f6fbfd;
+      --text:#062834;
+      --textStrong:#03202a;
+      --muted:#4a6671;
+      --pillA:#135312;
+      --pillB:#21e9c3;
+      --pillShadow:0 10px 22px -6px rgba(0,160,210,.32),0 4px 10px rgba(0,0,0,.08);
+      --chipBg:#f9feff;
+      --chipBorder:#2fb9ff;
+      --chipText:#05303b;
+      --focusRing:0 0 0 3px rgba(47,185,255,.35);
+    }
+    body{background:radial-gradient(circle at 25% 18%,var(--bgGradB),transparent 55%),radial-gradient(circle at 85% 70%,var(--bgGradC),transparent 60%),linear-gradient(180deg,var(--bgGradA),var(--bgGradC));color:var(--text);min-height:100vh;font-smooth:always;-webkit-font-smoothing:antialiased;}
+    .page-head{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 18px;gap:8px}
+  .page-title{display:block;font-weight:1000;font-size:30px;color:var(--textStrong);letter-spacing:.8px;position:relative}
+  .page-title:after{content:"";position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);width:140px;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--pillA),var(--pillB));opacity:.9}
+    .date-pill{display:inline-block;background:linear-gradient(135deg,var(--pillA),var(--pillB));
+      border:2px solid #ffffff;border-radius:999px;padding:14px 28px;font-size:30px;font-weight:900;letter-spacing:.6px;
+      color:#04313b;box-shadow:var(--pillShadow)}
+  .spec-heading{margin:0 0 18px 6px;font-weight:900;color:var(--textStrong);letter-spacing:.6px;font-size:24px;position:relative;padding-left:4px}
+  .spec-heading:before{content:"";position:absolute;left:0;bottom:-6px;width:72px;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--pillA),var(--pillB));opacity:.85}
+    /* Larger, even grid for patient viewing */
+  /* Single specialty stage centered */
+  main.container{max-width:1400px;margin:0 auto}
+  #patientList{display:block}
+  .spec-section{margin:0 auto 24px auto}
+  #patientList .doctor-list{display:grid;gap:22px;align-items:stretch}
+  .doctor-list.four-col-grid{grid-template-columns:repeat(4, 1fr);grid-auto-rows:1fr;}
+  .doctor-list.fixed-grid{grid-auto-rows:1fr;} /* legacy class retained for safety */
+  #patientList .card{display:flex}
+  #patientList .card > .doc-card{flex:1;display:flex}
+  .fade-enter{opacity:0;transform:translateY(12px);}
+  .fade-enter-active{transition:opacity .5s ease, transform .5s ease;opacity:1;transform:translateY(0)}
+  .fade-exit{opacity:1;}
+  .fade-exit-active{transition:opacity .4s ease;opacity:0}
+  body,html{overflow:hidden;} /* prevent scroll per requirement */
+    #patientList .card{height:100%}
+  .doc-card{display:flex;gap:18px;align-items:flex-start;background:linear-gradient(145deg,#ffffff 0%,var(--cardInset) 100%);border:1px solid var(--cardEdge);border-radius:18px;padding:16px 18px;min-height:128px;box-shadow:0 4px 10px -4px rgba(0,0,0,.08),0 2px 5px rgba(0,0,0,.05)}
+  .doc-card .avatar{width:92px;height:92px;border-radius:18px;object-fit:cover;border:3px solid #d7ebf2;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.10)}
+    .doc-card .nm{font-weight:800;font-size:20px;letter-spacing:.25px;line-height:1.15;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--textStrong)}
+      .muted{color:var(--muted) !important}
+  .chip{display:inline-flex;align-items:center;gap:8px;background:var(--chipBg);border:2px solid var(--chipBorder);border-radius:12px;padding:8px 12px;font-size:15px;font-weight:700;margin-right:10px;margin-top:10px;color:var(--chipText);box-shadow:0 1px 4px rgba(0,0,0,.05)}
+    .chip .ico{display:none}
+  .time-pill{display:inline-flex;flex-direction:column;align-items:flex-start;gap:4px;background:linear-gradient(135deg,var(--pillA),var(--pillB));color:#042b35;border:2px solid #ffffff;border-radius:22px;padding:14px 24px 12px 24px;font-weight:800;font-size:28px;margin-top:10px;box-shadow:var(--pillShadow);max-width:100%;}
+  .time-pill small{display:block;font-size:13px;font-weight:800;opacity:.92;letter-spacing:.55px;text-transform:uppercase;line-height:1.1}
+  .time-pill span.time{display:block;font-size:28px;line-height:1.05;white-space:nowrap;letter-spacing:.5px}
+  @media (max-width:1400px){ .time-pill{font-size:26px} .time-pill span.time{font-size:26px} }
+  @media (max-width:1100px){ .time-pill{font-size:24px;padding:12px 20px} .time-pill span.time{font-size:24px} }
+  @media (max-width:900px){ .time-pill{font-size:22px} .time-pill span.time{font-size:22px} }
+  @media (max-width:1400px){ .time-pill{font-size:24px;padding:10px 22px} }
+  @media (max-width:1100px){ .time-pill{font-size:22px} }
+  @media (max-width:900px){ .time-pill{font-size:20px} }
+    @media(max-width:860px){
+      .doc-card .nm{font-size:18px}
+      .time-pill{font-size:22px}
+      .date-pill{font-size:24px}
+      .chip{font-size:14px}
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <div class="page-title">Doctors Schedule</div>
+    <div class="date-pill" id="datePill">{{ today_iso }}</div>
+  </header>
+  <!-- Slide indicator removed per request -->
+  <main class="container" style="padding:14px">
+    <div id="patientList"></div>
+  </main>
+  <script id="patient-bootstrap" type="application/json">{{ (data or {}) | tojson | safe }}</script>
+  <script>
+    try {
+      window.__PATIENT_BOOTSTRAP__ = JSON.parse(document.getElementById('patient-bootstrap').textContent);
+    } catch (e) {
+      window.__PATIENT_BOOTSTRAP__ = {specialty_order:[], doctors:[]};
+    }
+  </script>
+  <script src="/static/js/patient.js"></script>
+  <script>
+    // After patient.js renders, adjust long names to fit by decreasing font-size within bounds.
+    const resizeNames = () => {
+      document.querySelectorAll('.doc-card .nm').forEach(el => {
+        const maxLines = 2; // already line-clamped to 2 via CSS
+        const baseSize = 20; // starting size (matches .nm style)
+        const minSize = 14;
+        // Reset
+        el.style.fontSize = baseSize + 'px';
+        el.style.lineHeight = '1.15';
+        // Measure overflow by scrollHeight vs computed line height * lines
+        const lh = parseFloat(getComputedStyle(el).lineHeight) || (baseSize * 1.15);
+        let attempts = 0;
+        while (attempts < 8 && el.scrollHeight > lh * maxLines && parseFloat(el.style.fontSize) > minSize){
+          const cur = parseFloat(el.style.fontSize);
+          el.style.fontSize = (cur - 1) + 'px';
+          attempts++;
+        }
+      });
+    };
+    // Initial and on slide change (hook into EventSource updates indirectly by MutationObserver)
+    const obs = new MutationObserver(() => resizeNames());
+    const target = document.getElementById('patientList');
+    if(target) obs.observe(target, {childList:true, subtree:true});
+    window.addEventListener('load', resizeNames);
+  </script>
+</body>
+</html>

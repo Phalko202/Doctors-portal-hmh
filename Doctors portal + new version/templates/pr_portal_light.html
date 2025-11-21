@@ -1,0 +1,2456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PR Portal - Management System</title>
+    <link rel="stylesheet" href="/static/css/legend-drawer.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #06b6d4;
+            
+            /* Light Mode Colors */
+            --bg: #f8fafc;
+            --panel: #ffffff;
+            --card: #f1f5f9;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --hover: #f1f5f9;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--panel);
+            border-right: 2px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 4px 0 12px var(--shadow);
+        }
+        
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 2px solid var(--border);
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+        
+        .sidebar-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            font-size: 13px;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 16px;
+        }
+        
+        .nav-item {
+            width: 100%;
+            padding: 14px 18px;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            text-align: left;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            font-weight: 500;
+            border: 2px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: var(--hover);
+            border-color: var(--border);
+            transform: translateX(4px);
+        }
+        
+        .nav-item.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            border-color: var(--primary);
+        }
+        
+        .nav-item .icon {
+            font-size: 22px;
+            width: 28px;
+            text-align: center;
+        }
+        
+        .sidebar-footer {
+            padding: 16px 24px;
+            border-top: 2px solid var(--border);
+        }
+        
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .back-link:hover {
+            color: var(--primary);
+            transform: translateX(-4px);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 40px;
+            max-width: calc(100vw - 280px);
+        }
+        
+        .view-panel {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .view-panel.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .view-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 3px solid var(--border);
+        }
+        
+        .view-header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        
+        .view-description {
+            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        }
+        
+        .btn-secondary {
+            background: var(--panel);
+            color: var(--text);
+            border-color: var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--hover);
+            border-color: var(--primary);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-black {
+            background: #0f172a;
+            color: white;
+            border-color: rgba(15, 23, 42, 0.6);
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.2);
+        }
+
+        .btn-black:hover {
+            background: #000000;
+            border-color: #000000;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.35);
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--panel);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .card h3 {
+            font-size: 22px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        
+        .card-subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        
+        /* Tabs */
+        .tabs-container {
+            margin-bottom: 28px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 3px solid var(--border);
+            margin-bottom: 28px;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 14px 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tab:hover {
+            color: var(--text);
+            background: var(--hover);
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 800;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text);
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            background: white;
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--panel);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg);
+        }
+        
+        .modal-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text);
+        }
+        
+        .modal-close {
+            background: var(--danger);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
+        .modal-body {
+            padding: 28px;
+        }
+        
+        .modal-footer {
+            padding: 20px 28px;
+            border-top: 2px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            background: var(--bg);
+        }
+        
+        /* List Items */
+        .list-item {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .list-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+            transform: translateX(4px);
+        }
+        
+        .list-item-content {
+            flex: 1;
+        }
+        
+        .list-item-title {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+        
+        .list-item-meta {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        .list-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.4;
+        }
+        
+        .empty-state-text {
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--panel) 0%, var(--bg) 100%);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .stat-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-split {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .stat-mini {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.05);
+            border-radius: 12px;
+            padding: 10px 12px;
+            text-align: center;
+        }
+
+        .stat-mini-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .stat-mini-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text);
+            margin-top: 4px;
+        }
+
+        .stat-footnote {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 14px;
+            line-height: 1.4;
+        }
+
+        .staff-card {
+            background: var(--panel);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 14px;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .staff-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary-light);
+            box-shadow: 0 10px 24px rgba(59, 130, 246, 0.2);
+        }
+
+        .staff-card:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        }
+
+        .staff-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .staff-card-icon {
+            font-size: 22px;
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 6px 8px;
+            box-shadow: inset 0 0 0 1px var(--border);
+        }
+
+        .staff-card-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .staff-card-role {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: capitalize;
+            margin-top: 2px;
+        }
+
+        .staff-card-active {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .staff-card-active.active {
+            background: rgba(16, 185, 129, 0.18);
+            color: #047857;
+        }
+
+        .staff-card-active.inactive {
+            background: rgba(239, 68, 68, 0.18);
+            color: #b91c1c;
+        }
+
+        .staff-card-stations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            font-size: 11px;
+        }
+
+        .staff-card-chip {
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .staff-card-empty {
+            color: var(--text-muted);
+        }
+
+        .staff-card-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            font-weight: 700;
+        }
+
+        .staff-card-badge {
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--primary);
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+
+        .staff-card-link {
+            color: var(--primary);
+        }
+
+        .staff-filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-end;
+            margin-bottom: 18px;
+        }
+
+        .filter-control {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-control label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .filter-control select,
+        .filter-control input {
+            min-width: 170px;
+        }
+
+        #staffResultsMeta {
+            margin-left: auto;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .wizard-modal {
+            max-width: 760px;
+        }
+
+        .wizard-step {
+            display: none;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .wizard-step.active {
+            display: flex;
+        }
+
+        .wizard-icon {
+            font-size: 42px;
+            background: rgba(59, 130, 246, 0.12);
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            color: var(--primary);
+        }
+
+        .wizard-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .wizard-section {
+            background: var(--panel);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .wizard-section h4 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .wizard-note {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .role-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: var(--panel);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .role-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.16);
+        }
+
+        .role-card.selected {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.12);
+        }
+
+        .role-card input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .role-card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .role-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* Pool Card Styles */
+        .pool-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 3px solid var(--border);
+            border-radius: 16px;
+            background: var(--panel);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pool-card:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .pool-card input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .pool-card input[type="checkbox"]:checked + div > div {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .pool-card:has(input:checked) {
+            border-color: var(--primary);
+            border-width: 4px;
+            background: rgba(59, 130, 246, 0.08);
+        }
+
+        .role-card-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .summary-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .summary-grid .wizard-section {
+            margin-bottom: 0;
+        }
+
+        .mini-tab-group {
+            display: inline-flex;
+            gap: 8px;
+            background: var(--bg);
+            padding: 6px;
+            border-radius: 999px;
+            border: 2px solid var(--border);
+        }
+
+        .mini-tab {
+            border: none;
+            background: transparent;
+            padding: 8px 18px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mini-tab.active {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.25);
+        }
+
+        .shift-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .shift-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: var(--panel);
+            align-items: center;
+        }
+
+        .shift-row strong {
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .shift-row .form-input,
+        .shift-row .form-select {
+            padding: 10px 12px;
+            font-size: 13px;
+        }
+
+        .shift-row-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .shift-empty {
+            padding: 20px;
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .doctor-opd-list {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .doctor-opd-card {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: var(--panel);
+            align-items: flex-start;
+        }
+
+        .doctor-opd-card h4 {
+            margin: 0 0 6px 0;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .doctor-opd-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .doctor-opd-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+        }
+
+        .summary-chip {
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ai-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .ai-summary-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.08));
+            border: 2px solid rgba(59, 130, 246, 0.15);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .ai-summary-icon {
+            font-size: 22px;
+        }
+
+        .ai-summary-card strong {
+            font-size: 26px;
+            color: var(--primary-dark);
+            line-height: 1.1;
+        }
+
+        .ai-summary-card span {
+            font-size: 13px;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .ai-summary-card small {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .ai-alerts {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ai-alert {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            border: 2px solid transparent;
+        }
+
+        .ai-alert.warning {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.28);
+            color: #b91c1c;
+        }
+
+        .ai-alert.success {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.28);
+            color: #047857;
+        }
+
+        .ai-coverage-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .coverage-item {
+            background: var(--panel);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+            transition: all 0.25s ease;
+        }
+
+        .coverage-item:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 10px 24px rgba(59, 130, 246, 0.18);
+            transform: translateY(-2px);
+        }
+
+        .coverage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .coverage-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .coverage-status {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .coverage-status.ok {
+            background: rgba(16, 185, 129, 0.15);
+            color: #047857;
+        }
+
+        .coverage-status.warn {
+            background: rgba(239, 68, 68, 0.18);
+            color: #b91c1c;
+        }
+
+        .coverage-status.off {
+            background: rgba(100, 116, 139, 0.18);
+            color: #475569;
+        }
+
+        .coverage-meta {
+            margin-top: 10px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .coverage-staff {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text);
+        }
+
+        .coverage-staff span {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .coverage-empty {
+            padding: 24px;
+            border: 2px dashed var(--border);
+            border-radius: 14px;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🏥 PR Portal</h2>
+                <p class="subtitle">Patient Relations Management</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-view="dashboard">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </button>
+                
+                <!-- AI GENERATION BUTTON - BOLD AND UNIQUE -->
+                <button class="nav-item" data-view="ai-generator" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; font-weight: 800; border: 3px solid #a78bfa; box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4); margin-bottom: 16px;">
+                    <span class="icon">🤖✨</span>
+                    <span>AI ROSTER GENERATION</span>
+                </button>
+                
+                <button class="nav-item" data-view="schedule">
+                    <span class="icon">📅</span>
+                    <span>Schedule Management</span>
+                </button>
+                <button class="nav-item" data-view="staff">
+                    <span class="icon">👥</span>
+                    <span>Staff Directory</span>
+                </button>
+                <button class="nav-item" data-view="leaves">
+                    <span class="icon">🏖️</span>
+                    <span>Leave Management</span>
+                </button>
+                <button class="nav-item" data-view="ai-config">
+                    <span class="icon">🤖</span>
+                    <span>AI Configuration</span>
+                </button>
+                <button class="nav-item" data-view="integrations">
+                    <span class="icon">🔗</span>
+                    <span>Integrations</span>
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="/admin" class="back-link">← Back to Admin</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard -->
+            <div id="dashboard-view" class="view-panel active">
+                <div class="view-header">
+                    <div>
+                        <h1>Dashboard</h1>
+                        <p class="view-description">Overview of PR staff roster and operations</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="prPortal.refreshDashboard()">
+                            🔄 Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-label">Total Staff</div>
+                        <div class="stat-value" id="statTotalStaff">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏥</div>
+                        <div class="stat-label">Clinical Staff</div>
+                        <div class="stat-value" id="statClinical">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-label">Front Staff</div>
+                        <div class="stat-value" id="statFront">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏖️</div>
+                        <div class="stat-label">On Leave Today</div>
+                        <div class="stat-value" id="statOnLeave">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🩺</div>
+                        <div class="stat-label">Specialists On Duty</div>
+                        <div class="stat-value" id="statSpecialistTotal">0</div>
+                        <div class="stat-split">
+                            <div class="stat-mini">
+                                <div class="stat-mini-label">Morning</div>
+                                <div class="stat-mini-value" id="statSpecialistMorning">0</div>
+                            </div>
+                            <div class="stat-mini">
+                                <div class="stat-mini-label">Evening</div>
+                                <div class="stat-mini-value" id="statSpecialistEvening">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-footnote" id="statSpecialistNotes">Specialties: --</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Generator View -->
+            <div id="ai-generator-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>AI Roster Generation</h1>
+                        <p class="view-description">Generate staff roster automatically from doctor schedules and manage daily coverage.</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="prPortal.renderAIGenerator()">
+                            🔄 Refresh Settings
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" style="padding: 24px; margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+                        <div>
+                            <h3 style="margin: 0; font-size: 18px; color: var(--primary); font-weight: 800;">Readiness Overview</h3>
+                            <p style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 13px;">Live snapshot of what the AI generator needs before running.</p>
+                        </div>
+                        <div id="aiSpecialtyMeta" style="font-size: 12px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;"></div>
+                    </div>
+                    <div id="aiGeneratorSummary" class="ai-summary-grid"></div>
+                    <div id="aiGeneratorAlerts" class="ai-alerts"></div>
+                </div>
+
+                <div class="card" style="padding: 24px;">
+                    <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; align-items: start;">
+                        <div>
+                            <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 20px; border-radius: 16px; margin-bottom: 20px;">
+                                <div style="font-weight: 800; font-size: 18px; margin-bottom: 6px;">✨ Intelligent Roster Generation</div>
+                                <ul style="margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.6;">
+                                    <li>Analyzes doctor duty schedules from PR Clinical Roster</li>
+                                    <li>Matches clinical staff to specialties automatically</li>
+                                    <li>Allocates front desk staff (2 per day by default)</li>
+                                    <li>Respects AI configuration such as station exclusions</li>
+                                </ul>
+                            </div>
+
+                            <div style="display: grid; gap: 16px;">
+                                <div class="form-group">
+                                    <label>Start Date (16th of month)</label>
+                                    <input type="date" id="aiGenStartDate" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>End Date (15th of next month)</label>
+                                    <input type="date" id="aiGenEndDate" class="form-input">
+                                </div>
+                                <div style="background: rgba(239, 68, 68, 0.08); border: 2px solid rgba(239, 68, 68, 0.2); color: #b91c1c; padding: 12px 16px; border-radius: 12px; font-size: 13px;">
+                                    ⚠️ This will overwrite existing roster data for the selected range.
+                                </div>
+                                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                    <button id="aiGenerateButton" class="btn btn-primary" onclick="prPortal.generateRoster()" style="flex: 1; min-width: 200px;">
+                                        🤖 Generate Roster
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="prPortal.loadDoctorScheduleForDate()" style="flex: 1; min-width: 200px;">
+                                        👨‍⚕️ View Doctors On Duty
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--bg); padding: 20px; border-radius: 16px; border: 2px solid var(--border);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                <div>
+                                    <h3 style="margin: 0; font-size: 18px; color: var(--primary); font-weight: 800;">Doctors On Duty</h3>
+                                    <p style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 13px;">Preview today's doctor lineup before generating the roster.</p>
+                                </div>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <input type="date" id="aiDoctorViewDate" class="form-input" style="width: 150px;" onchange="prPortal.loadDoctorScheduleForDate()">
+                                    <button class="btn btn-secondary" onclick="prPortal.loadDoctorScheduleForDate()">🔍 Search</button>
+                                    <button class="btn btn-primary" onclick="prPortal.showComprehensiveDoctorSearch()" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); font-weight: 700; white-space: nowrap;">🔍 Advanced Search</button>
+                                </div>
+                            </div>
+                            <div id="doctorScheduleList" style="max-height: 420px; overflow-y: auto;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="padding: 24px; margin-top: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+                        <div>
+                            <h3 style="margin: 0; font-size: 18px; color: var(--text); font-weight: 800;">Specialty Coverage Map</h3>
+                            <p style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 13px;">Ensure every specialty has AI-ready staff coverage.</p>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" onclick="prPortal.syncDoctorSpecialties()">🔄 Sync Specialties</button>
+                    </div>
+                    <div id="aiCoverageList" class="ai-coverage-list"></div>
+                </div>
+            </div>
+
+            <!-- AI Configuration View -->
+            <div id="ai-config-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>AI Configuration</h1>
+                        <p class="view-description">Configure AI roster generation settings, shift templates, and operational rules</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="prPortal.renderAIConfig()">
+                            🔄 Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <button class="tab active" data-tab="gopd" onclick="prPortal.switchTab('gopd')">🏥 GOPD Shifts</button>
+                        <button class="tab" data-tab="shift-knowledge" onclick="prPortal.switchTab('shift-knowledge')">🧠 Shift Knowledge</button>
+                        <button class="tab" data-tab="stations" onclick="prPortal.switchTab('stations')">🎯 Stations</button>
+                        <button class="tab" data-tab="ai-rules" onclick="prPortal.switchTab('ai-rules')">⚙️ AI Rules</button>
+                    </div>
+
+                    <div class="tab-contents">
+                        <!-- GOPD Shifts Tab - CATEGORIZED SYSTEM -->
+                        <div class="tab-content active" data-tab="gopd">
+                            <h3 style="margin-bottom: 12px;">🏥 GOPD Configuration</h3>
+                            <p class="card-subtitle">Configure General Outpatient Department shifts organized by categories (Morning/Evening/Night).</p>
+
+                            <div class="card" style="margin-top: 20px;">
+                                <div class="form-group">
+                                    <label>Minimum Staff Count per Shift</label>
+                                    <input type="number" id="gopdStaffCount" class="form-input" min="1" max="10" value="2">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>GOPD Shift Categories</label>
+                                    
+                                    <!-- Category Tabs -->
+                                    <div id="gopdCategoryTabs" style="display: flex; gap: 8px; margin: 16px 0; flex-wrap: wrap;"></div>
+                                    
+                                    <!-- Shifts for Active Category -->
+                                    <div id="gopdShiftsList" style="margin-top: 12px; min-height: 100px; padding: 16px; background: var(--bg); border-radius: 8px;"></div>
+                                    
+                                    <div style="display: flex; gap: 12px; margin-top: 16px;">
+                                        <button class="btn btn-secondary btn-sm" onclick="prPortal.addGopdCategory()">
+                                            ➕ Add Category
+                                        </button>
+                                        <button class="btn btn-black btn-sm" onclick="prPortal.addGopdShiftToCategory()">
+                                            ➕ Add Shift to Category
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-success" onclick="prPortal.saveGopdConfig()">
+                                    💾 Save GOPD Configuration
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Shift Knowledge Tab - CATEGORIZED SYSTEM -->
+                        <div class="tab-content" data-tab="shift-knowledge">
+                            <h3 style="margin-bottom: 12px;">🧠 PR Shift Knowledge</h3>
+                            <p class="card-subtitle">Configure PR staff shift templates, Friday duty coverage, and doctor OPD timings used by the AI roster.</p>
+
+                            <!-- Staff Shift Templates with Categories -->
+                            <div class="card" style="margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                    <div>
+                                        <h4 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--primary);">Staff Shift Templates</h4>
+                                        <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--text-muted);">Define shift catalog organized by categories (Morning/Evening/Night).</p>
+                                    </div>
+                                    <div class="mini-tab-group">
+                                        <button class="mini-tab active" id="prShiftClinicalTab" onclick="prPortal.switchStaffTeam('clinical')">Clinical</button>
+                                        <button class="mini-tab" id="prShiftFrontTab" onclick="prPortal.switchStaffTeam('front')">Front Desk</button>
+                                    </div>
+                                </div>
+
+                                <!-- Category Tabs for Current Team -->
+                                <div id="staffCategoryTabs" style="display: flex; gap: 8px; margin: 18px 0; flex-wrap: wrap;"></div>
+
+                                <!-- Shifts for Active Category -->
+                                <div class="shift-list" id="prShiftList" style="margin-top: 12px; min-height: 100px; padding: 16px; background: var(--bg); border-radius: 8px;"></div>
+
+                                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px;">
+                                    <button class="btn btn-secondary btn-sm" onclick="prPortal.openManageCategoriesModal(true)">➕ Add Category</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="prPortal.openManageCategoriesModal(false)">⚙️ Manage Categories</button>
+                                    <button class="btn btn-black btn-sm" onclick="prPortal.addShiftToStaffCategory()">➕ Add Shift to Category</button>
+                                </div>
+                            </div>
+
+                            <div class="card" style="margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                    <div>
+                                        <h4 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--secondary);">Friday Duty Coverage</h4>
+                                        <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--text-muted);">Set minimum staffing for mosque Friday operations with fixed and custom shift options.</p>
+                                    </div>
+                                    <div class="mini-tab-group">
+                                        <button class="mini-tab active" id="fridayClinicalTab" onclick="prPortal.switchFridayTeam('clinical')">Clinical</button>
+                                        <button class="mini-tab" id="fridayFrontTab" onclick="prPortal.switchFridayTeam('front')">Front Desk</button>
+                                    </div>
+                                </div>
+
+                                <div class="shift-list" id="fridayShiftList" style="margin-top: 18px;"></div>
+
+                                <div style="display: flex; justify-content: flex-end; margin-top: 16px; gap: 12px;">
+                                    <button class="btn btn-black btn-sm" onclick="prPortal.addPrShift('friday')">➕ Add Friday Shift</button>
+                                </div>
+                            </div>
+
+                            <!-- Doctor OPD Information Section -->
+                            <div class="card" style="margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                    <div>
+                                        <h4 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--accent);">Doctor OPD Information</h4>
+                                        <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--text-muted);">Define OPD timings and patient capacity for each medical specialty to guide AI roster generation.</p>
+                                    </div>
+                                </div>
+
+                                <div id="doctorOpdList" style="margin-top: 18px; display: flex; flex-direction: column; gap: 12px;"></div>
+
+                                <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+                                    <button class="btn btn-black btn-sm" onclick="prPortal.openDoctorOpdModal()">➕ Add OPD Profile</button>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                                <button class="btn btn-success" onclick="prPortal.saveShiftKnowledge()">💾 Save Shift Knowledge</button>
+                            </div>
+                        </div>
+
+                        <!-- Stations Management Tab -->
+                        <div class="tab-content" data-tab="stations">
+                            <h3 style="margin-bottom: 16px;">🏢 Stations Management</h3>
+                            <p class="card-subtitle">Add and manage clinical and front office stations</p>
+                            
+                            <div id="stationsManagementContent"></div>
+                        </div>
+
+                        <!-- AI Rules Tab -->
+                        <div class="tab-content" data-tab="ai-rules">
+                            <h3 style="margin-bottom: 16px;">⚙️ AI Generation Rules</h3>
+                            <p class="card-subtitle">Configure how AI calculates staff duties and allocations</p>
+                            
+                            <div class="config-section" style="background: var(--card-bg); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                                <h4 style="margin-bottom: 16px; color: var(--primary);">📅 Weekly Off Requirements</h4>
+                                
+                                <div class="form-group">
+                                    <label>Minimum Weekly Offs per Staff</label>
+                                    <input type="number" id="minWeeklyOffs" class="form-input" value="2" min="0" max="7">
+                                    <small style="color: var(--text-muted); font-size: 13px;">Every staff member must get at least this many offs per week</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Maximum Consecutive Work Days</label>
+                                    <input type="number" id="maxConsecutiveDays" class="form-input" value="6" min="1" max="14">
+                                    <small style="color: var(--text-muted); font-size: 13px;">Maximum days a staff can work without a day off</small>
+                                </div>
+                            </div>
+
+                            <div class="config-section" style="background: var(--card-bg); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                                <h4 style="margin-bottom: 16px; color: var(--primary);">🚨 ED (Emergency Duty) Rules</h4>
+                                
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                        <input type="checkbox" id="allowEDAssignment" checked style="width: auto; transform: scale(1.2);">
+                                        <span>Enable ED duty assignments</span>
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Maximum ED Duties per Staff per Week</label>
+                                    <input type="number" id="maxEDPerWeek" class="form-input" value="1" min="0" max="7">
+                                    <small style="color: var(--text-muted); font-size: 13px;">How many ED shifts a single staff can handle weekly</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                        <input type="checkbox" id="noRepeatedED" checked style="width: auto; transform: scale(1.2);">
+                                        <span>Prevent repeated ED duty in same week</span>
+                                    </label>
+                                    <small style="color: var(--text-muted); font-size: 13px; display: block; margin-top: 8px;">Staff cannot get ED on multiple days in a single week</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                        <input type="checkbox" id="noEDAfterOff" checked style="width: auto; transform: scale(1.2);">
+                                        <span>No ED assignment immediately after day off</span>
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                        <input type="checkbox" id="noEDOnFriday" style="width: auto; transform: scale(1.2);">
+                                        <span>No ED assignments on Friday</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="config-section" style="background: var(--card-bg); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                                <h4 style="margin-bottom: 16px; color: var(--primary);">⏰ Shift Timing Rules</h4>
+                                
+                                <div class="form-group">
+                                    <label>Staff Start Time Offset (minutes before doctor)</label>
+                                    <input type="number" id="staffStartOffset" class="form-input" value="30" min="0" max="120">
+                                    <small style="color: var(--text-muted); font-size: 13px;">If doctor starts at 9:00 AM, staff starts at 8:30 AM</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Minimum Break Between Shifts (hours)</label>
+                                    <input type="number" id="minBreakHours" class="form-input" value="12" min="0" max="24">
+                                    <small style="color: var(--text-muted); font-size: 13px;">Minimum rest time between consecutive shifts</small>
+                                </div>
+                            </div>
+
+                            <div class="config-section" style="background: var(--card-bg); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                                <h4 style="margin-bottom: 16px; color: var(--primary);">📐 Roster Generation Rules</h4>
+                                <p style="margin: 0 0 12px 0; font-size: 13px; color: var(--text-muted);">These rules are always applied during AI generation to keep things fair and to avoid repeating the same station too often.</p>
+
+                                <ul style="font-size: 13px; color: var(--text-muted); padding-left: 18px; margin-bottom: 12px;">
+                                    <li>Clinical and front staff will only be assigned to stations they are allowed to work in.</li>
+                                    <li>No staff member will be placed in the <strong>same station more than twice</strong> within a single generated period.</li>
+                                    <li>AI prefers staff who have worked fewer total days in the range to balance workload.</li>
+                                    <li>Day-off pools still apply so staff who worked many days in a row get automatic breaks.</li>
+                                </ul>
+
+                                <div style="font-size: 12px; color: var(--text-muted); background: rgba(59,130,246,0.06); border-radius: 8px; padding: 10px 12px; border: 1px dashed rgba(59,130,246,0.3);">
+                                    These rules are baked into the AI logic in the backend. If you need tighter or looser limits in future (for example, allowing 3 times per station instead of 2), they can be adjusted here and the engine can be updated to follow them.
+                                </div>
+                            </div>
+
+                            <div class="config-section" style="background: var(--card-bg); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                                <h4 style="margin-bottom: 16px; color: var(--primary);">🎯 Workload Balancing</h4>
+                                
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                        <input type="checkbox" id="enableOnCallAdjust" checked style="width: auto; transform: scale(1.2);">
+                                        <span>Enable automatic workload adjustment for on-call doctors</span>
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                        <input type="checkbox" id="balanceWorkload" checked style="width: auto; transform: scale(1.2);">
+                                        <span>Balance workload across all staff members</span>
+                                    </label>
+                                    <small style="color: var(--text-muted); font-size: 13px; display: block; margin-top: 8px;">AI will try to distribute shifts evenly</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                        <input type="checkbox" id="respectPreferences" checked style="width: auto; transform: scale(1.2);">
+                                        <span>Respect staff shift preferences (when available)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-success" onclick="prPortal.saveAIRules()" style="font-size: 15px; padding: 12px 24px;">
+                                💾 Save AI Rules Configuration
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staff Directory -->
+            <div id="staff-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>Staff Directory</h1>
+                        <p class="view-description">Manage all PR staff members</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="prPortal.refreshStaffDirectoryFromServer()" style="margin-right: 8px;">
+                            🔄 Refresh
+                        </button>
+                        <input type="text" id="staffSearch" class="form-input" placeholder="🔍 Search staff..." style="width: 250px;">
+                        <button class="btn btn-black" onclick="prPortal.openAddStaffModal()">
+                            ➕ Add Staff
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="staff-filter-bar">
+                    <div class="filter-control">
+                        <label for="staffRoleFilter">Role</label>
+                        <select id="staffRoleFilter" class="form-select" onchange="prPortal.setStaffFilter('role', this.value)">
+                            <option value="all">All roles</option>
+                            <option value="clinical">Clinical</option>
+                            <option value="front">Front Desk</option>
+                            <option value="trainer">Trainer</option>
+                        </select>
+                    </div>
+                    <div class="filter-control">
+                        <label for="staffStatusFilter">Status</label>
+                        <select id="staffStatusFilter" class="form-select" onchange="prPortal.setStaffFilter('status', this.value)">
+                            <option value="all">All Staff</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="filter-control">
+                        <label for="staffStationFilter">Station</label>
+                        <select id="staffStationFilter" class="form-select" onchange="prPortal.setStaffFilter('station', this.value)">
+                            <option value="any">All stations</option>
+                        </select>
+                    </div>
+                    <div class="filter-control">
+                        <label for="staffPoolFilter">Pool</label>
+                        <select id="staffPoolFilter" class="form-select" onchange="prPortal.setStaffFilter('pool', this.value)">
+                            <option value="any">All pools</option>
+                            <option value="A">Pool A</option>
+                            <option value="B">Pool B</option>
+                            <option value="C">Pool C</option>
+                            <option value="D">Pool D</option>
+                        </select>
+                    </div>
+                    <span id="staffResultsMeta">Showing 0</span>
+                </div>
+
+                <div id="staffGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px;"></div>
+            </div>
+
+            <!-- Schedule Management -->
+            <div id="schedule-view" class="view-panel">
+                <div class="view-header" style="flex-direction: column; gap: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <div>
+                            <h1>Schedule Management</h1>
+                            <p class="view-description">Monthly roster from 16th to 15th</p>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-primary" onclick="window.open('/pr_schedule_fullscreen', '_blank')" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); font-weight: 700;">
+                                🔍 Full Screen
+                            </button>
+                            <button class="btn btn-danger" onclick="prPortal.openClearScheduleModal()" style="background: linear-gradient(135deg, #dc2626, #b91c1c); font-weight: 700;">
+                                🗑️ Clear
+                            </button>
+                            <button class="btn btn-success" onclick="prPortal.exportRoster()">
+                                📥 Export
+                            </button>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 16px; width: 100%; background: var(--card); padding: 12px 20px; border-radius: 12px;">
+                        <button class="btn btn-secondary" onclick="prPortal.prevRoster()" style="padding: 10px 24px; font-size: 16px;">
+                            ◀ Back
+                        </button>
+                        <h2 id="scheduleTitle" style="margin: 0; font-size: 18px; font-weight: 700; color: var(--primary); min-width: 300px; text-align: center;">Loading...</h2>
+                        <button class="btn btn-secondary" onclick="prPortal.nextRoster()" style="padding: 10px 24px; font-size: 16px;">
+                            Front ▶
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" style="overflow-x: auto; padding: 20px;">
+                    <div id="rosterGrid" style="min-width: 100%;">
+                        <table id="rosterTable" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                            <thead>
+                                <tr style="background: var(--bg); position: sticky; top: 0; z-index: 10;">
+                                    <th style="padding: 14px; border: 2px solid var(--border); font-weight: 800; text-align: left; min-width: 150px; background: var(--primary); color: white;">Staff Name</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rosterBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leave Management -->
+            <div id="leaves-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>Leave Management</h1>
+                        <p class="view-description">Day-by-day leave tracking (up to 30 days future)</p>
+                    </div>
+                    <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
+                        <button class="btn btn-secondary" onclick="prPortal.prevDay()">
+                            ◀ Back
+                        </button>
+                        <button class="btn btn-primary" onclick="prPortal.jumpToToday()" style="min-width: 120px;">
+                            📅 Today
+                        </button>
+                        <input type="date" id="leaveDate" class="form-input" style="width: 180px;">
+                        <button class="btn btn-secondary" onclick="prPortal.nextDay()">
+                            Next ▶
+                        </button>
+                        <button class="btn btn-success" onclick="prPortal.openExportLeaveModal()">
+                            📊 Export Report
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 id="leaveDateDisplay">Leaves for Today</h3>
+                    <div id="leavesList" style="margin-top: 20px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integrations -->
+            <div id="integrations-view" class="view-panel">
+                <div class="view-header">
+                    <div>
+                        <h1>Integrations</h1>
+                        <p class="view-description">OneDrive & Telegram</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>☁️ OneDrive Sheet Integration</h3>
+                    <p class="card-subtitle">Connect to OneDrive Excel sheets for data sync</p>
+                    
+                    <div class="form-group">
+                        <label>OneDrive Sheet Access Token</label>
+                        <textarea id="oneDriveToken" class="form-textarea" placeholder="Paste your OneDrive API access token here..."></textarea>
+                        <small style="color: var(--text-muted); font-size: 13px;">⚠️ This token needs to be replaced monthly when creating new sheets</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Sheet ID/URL</label>
+                        <input type="text" id="oneDriveSheetId" class="form-input" placeholder="Enter OneDrive sheet ID or URL">
+                    </div>
+
+                    <div style="display: flex; gap: 12px;">
+                        <button class="btn btn-success" onclick="prPortal.saveOneDrive()">
+                            💾 Save Configuration
+                        </button>
+                        <button class="btn btn-secondary" onclick="prPortal.testOneDrive()">
+                            🔗 Test Connection
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📱 Telegram Integration</h3>
+                    <p class="card-subtitle">Configure Telegram bot for sick leave notifications</p>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                            <strong>Bot Status:</strong>
+                            <span id="telegramStatus" style="padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 13px;">NOT CONNECTED</span>
+                        </div>
+                        <div style="color: var(--text-muted); font-size: 14px;">
+                            <strong>Last Sync:</strong> <span id="telegramLastSync">Never</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Bot Token</label>
+                        <input type="text" id="telegramBotToken" class="form-input" placeholder="Enter your Telegram bot token">
+                        <small style="color: var(--text-muted); font-size: 13px;">Get this from @BotFather on Telegram</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Group/Channel ID</label>
+                        <input type="text" id="telegramGroupId" class="form-input" placeholder="Enter group ID (e.g., -1001234567890)">
+                        <small style="color: var(--text-muted); font-size: 13px;">Add bot to your group and use @userinfobot to get group ID</small>
+                    </div>
+
+                    <div style="display: flex; gap: 12px;">
+                        <button class="btn btn-success" onclick="prPortal.saveTelegram()">
+                            💾 Save Configuration
+                        </button>
+                        <button class="btn btn-primary" onclick="prPortal.testTelegram()">
+                            🔗 Test Connection
+                        </button>
+                        <button class="btn btn-secondary" onclick="prPortal.syncTelegram()">
+                            🔄 Sync Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add GOPD Shift Modal -->
+    <div id="addGopdShiftModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ Add GOPD Shift</h2>
+                <button class="modal-close" onclick="prPortal.closeModal('addGopdShiftModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Shift Name</label>
+                    <input type="text" id="gopdShiftName" class="form-input" placeholder="e.g., Morning Shift">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="time" id="gopdShiftStart" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="time" id="gopdShiftEnd" class="form-input">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="prPortal.closeModal('addGopdShiftModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="prPortal.saveGopdShift()">Save Shift</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctor OPD Modal -->
+    <div id="addSpecialtyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ Add Doctor OPD Profile</h2>
+                <button class="modal-close" onclick="prPortal.closeModal('addSpecialtyModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Specialty Name</label>
+                    <select id="specialtyName" class="form-select">
+                        <option value="">Select specialty...</option>
+                    </select>
+                </div>
+                <h4 style="margin: 20px 0 12px 0; color: var(--primary);">Shift 1</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label>Start</label>
+                        <input type="time" id="specialty_s1_start" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>End</label>
+                        <input type="time" id="specialty_s1_end" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Patients</label>
+                        <input type="number" id="specialty_s1_pts" class="form-input" min="0">
+                    </div>
+                </div>
+                <h4 style="margin: 20px 0 12px 0; color: var(--secondary);">Shift 2</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label>Start</label>
+                        <input type="time" id="specialty_s2_start" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>End</label>
+                        <input type="time" id="specialty_s2_end" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Patients</label>
+                        <input type="number" id="specialty_s2_pts" class="form-input" min="0">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="prPortal.closeModal('addSpecialtyModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="prPortal.saveDoctorOpd()">Save OPD Profile</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Details Modal -->
+    <div id="staffDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="staffDetailsName">👤 Staff Details</h2>
+                <button class="modal-close" onclick="prPortal.closeModal('staffDetailsModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="staffDetailsContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="staffDetailsEditButton">✏️ Edit Staff</button>
+                <button class="btn btn-secondary" onclick="prPortal.closeModal('staffDetailsModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Staff Modal -->
+    <div id="addStaffModal" class="modal">
+        <div class="modal-content wizard-modal">
+            <div class="modal-header">
+                <h2>➕ Add Staff Member · <span id="wizardStepTitle">Step 1: Basic Info</span></h2>
+                <button class="modal-close" onclick="prPortal.closeModal('addStaffModal')">×</button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 24px;">
+                <div class="wizard-step active" data-step="1">
+                    <div class="wizard-icon">👤</div>
+                    <div>
+                        <h3 style="margin-bottom: 6px;">Who are we adding?</h3>
+                        <p class="wizard-note">Enter the staff member's full name exactly as it should appear in rosters.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="wizardStaffName" class="form-input" placeholder="e.g., Ahmed Niham">
+                    </div>
+                </div>
+
+                <div class="wizard-step" data-step="2">
+                    <div class="wizard-icon">🎯</div>
+                    <div>
+                        <h3 style="margin-bottom: 6px;">Select their role(s)</h3>
+                        <p class="wizard-note">Combine clinical and front desk access if they rotate. Trainer is a special manual role without default stations.</p>
+                    </div>
+                    <div style="display: grid; gap: 12px;">
+                        <label class="role-card" data-role="clinical">
+                            <input type="checkbox" class="wizard-role-input" value="clinical">
+                            <div class="role-card-content">
+                                <span class="role-card-title">🏥 Clinical Staff</span>
+                                <span class="role-card-desc">Works inside OPD stations alongside doctors.</span>
+                            </div>
+                        </label>
+                        <label class="role-card" data-role="front">
+                            <input type="checkbox" class="wizard-role-input" value="front">
+                            <div class="role-card-content">
+                                <span class="role-card-title">🎯 Front Desk Staff</span>
+                                <span class="role-card-desc">Handles reception, tokens, and front-office duties.</span>
+                            </div>
+                        </label>
+                        <label class="role-card" data-role="trainer">
+                            <input type="checkbox" class="wizard-role-input" value="trainer">
+                            <div class="role-card-content">
+                                <span class="role-card-title">🎓 Training / Shadowing</span>
+                                <span class="role-card-desc">Learns on duty and is manually attached during roster generation.</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="wizard-step" data-step="3">
+                    <div class="wizard-icon">🧭</div>
+                    <div>
+                        <h3 style="margin-bottom: 6px;">Configure assignments</h3>
+                        <p class="wizard-note">Pick the stations this staff member can cover and set training preferences if applicable.</p>
+                    </div>
+
+                    <div id="wizardStationNotice" class="wizard-note" style="display: none; background: rgba(59, 130, 246, 0.08); border: 2px solid rgba(59, 130, 246, 0.2); padding: 12px 14px; border-radius: 12px;"></div>
+
+                    <div id="wizardClinicalSection" class="wizard-section" style="display: none;">
+                        <h4>Clinical Stations</h4>
+                        <p class="wizard-note">Select all OPD specialties this staff member can operate.</p>
+                        <div id="wizardClinicalStations" style="max-height: 220px; overflow-y: auto;">Loading stations…</div>
+                    </div>
+
+                    <div id="wizardFrontSection" class="wizard-section" style="display: none;">
+                        <h4>Front Desk Stations</h4>
+                        <p class="wizard-note">Choose the front-side positions they can cover.</p>
+                        <div id="wizardFrontStations" style="max-height: 220px; overflow-y: auto;">Loading stations…</div>
+                    </div>
+
+                    <div id="wizardTrainingSection" class="wizard-section" style="display: none;">
+                        <h4>Training Preferences</h4>
+                        <p class="wizard-note">Training staff are skipped by default and highlighted for manual allocation during AI roster generation.</p>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Training Focus Area</label>
+                            <select id="wizardTrainingFocus" class="form-select">
+                                <option value="clinical">Clinical exposure</option>
+                                <option value="front">Front desk exposure</option>
+                                <option value="hybrid">Hybrid / cross-training</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>AI Assignment Preference</label>
+                            <div style="display: grid; gap: 8px;">
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+                                    <input type="radio" name="wizardTrainingPreference" value="prompt" checked>
+                                    <span>Ask during AI generation (recommended)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+                                    <input type="radio" name="wizardTrainingPreference" value="omit">
+                                    <span>Skip automatically – supervisor will add manually later</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Notes for Supervisors</label>
+                            <textarea id="wizardTrainingNotes" class="form-textarea" placeholder="Optional: add mentorship context or reminders"></textarea>
+                        </div>
+                    </div>
+
+                    <div id="wizardPoolSection" class="wizard-section">
+                        <h4>Staff Pool Assignment</h4>
+                        <p class="wizard-note">Each staff member must be assigned to exactly 2 pools for scheduling flexibility and workload distribution.</p>
+                        <div style="background: var(--bg); padding: 16px; border-radius: 10px; border: 2px solid var(--border);">
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                                <label class="pool-card" data-pool="A">
+                                    <input type="checkbox" class="wizard-pool-input" value="A">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                        <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; color: white;">A</div>
+                                        <span style="font-size: 13px; font-weight: 600;">Pool A</span>
+                                    </div>
+                                </label>
+                                <label class="pool-card" data-pool="B">
+                                    <input type="checkbox" class="wizard-pool-input" value="B">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                        <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; color: white;">B</div>
+                                        <span style="font-size: 13px; font-weight: 600;">Pool B</span>
+                                    </div>
+                                </label>
+                                <label class="pool-card" data-pool="C">
+                                    <input type="checkbox" class="wizard-pool-input" value="C">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                        <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; color: white;">C</div>
+                                        <span style="font-size: 13px; font-weight: 600;">Pool C</span>
+                                    </div>
+                                </label>
+                                <label class="pool-card" data-pool="D">
+                                    <input type="checkbox" class="wizard-pool-input" value="D">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                        <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; color: white;">D</div>
+                                        <span style="font-size: 13px; font-weight: 600;">Pool D</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div id="wizardPoolError" style="color: #ef4444; font-size: 12px; margin-top: 12px; display: none; font-weight: 600; text-align: center;">⚠️ Please select exactly 2 pools</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wizard-step" data-step="4">
+                    <div class="wizard-icon">✅</div>
+                    <div>
+                        <h3 style="margin-bottom: 6px;">Review and confirm</h3>
+                        <p class="wizard-note">Double-check the summary before adding this staff member.</p>
+                    </div>
+
+                    <div class="summary-grid">
+                        <div class="wizard-section" style="gap: 10px;">
+                            <h4>Staff Details</h4>
+                            <div style="font-size: 14px;"><strong>Name:</strong> <span id="wizardSummaryName">—</span></div>
+                            <div style="font-size: 14px;"><strong>Roles:</strong> <span id="wizardSummaryRoles">—</span></div>
+                        </div>
+                        <div class="wizard-section" style="gap: 10px;">
+                            <h4>Station Coverage</h4>
+                            <div id="wizardSummaryStations" style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px;">—</div>
+                        </div>
+                        <div class="wizard-section" style="gap: 10px;">
+                            <h4>Pool Assignment</h4>
+                            <div id="wizardSummaryPools" style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px;">—</div>
+                        </div>
+                        <div class="wizard-section" id="wizardSummaryTrainingCard" style="gap: 10px; display: none;">
+                            <h4>Training Profile</h4>
+                            <div id="wizardSummaryTraining" style="font-size: 13px; color: var(--text);">—</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer wizard-footer">
+                <button class="btn btn-secondary" id="wizardPrevBtn" style="display: none;">◄ Previous</button>
+                <button class="btn btn-primary" id="wizardNextBtn">Next ►</button>
+                <button class="btn btn-primary" id="wizardFinishBtn" style="display: none;">✓ Add Staff</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Staff Modal -->
+    <div id="editStaffModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ Edit Staff Member</h2>
+                <button class="modal-close" onclick="prPortal.closeModal('editStaffModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="editStaffName" class="form-input" placeholder="Enter full name">
+                </div>
+                <div class="form-group">
+                    <label>Role(s)</label>
+                    <div style="background: var(--bg); padding: 16px; border-radius: 10px; border: 2px solid var(--border); display: grid; gap: 8px;">
+                        <label style="display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--panel); border-radius: 8px; cursor: pointer;">
+                            <input type="checkbox" class="edit-role-checkbox" value="clinical" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span style="font-size: 14px; font-weight: 600;">🏥 Clinical Staff</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--panel); border-radius: 8px; cursor: pointer;">
+                            <input type="checkbox" class="edit-role-checkbox" value="front" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span style="font-size: 14px; font-weight: 600;">🎯 Front Desk Staff</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--panel); border-radius: 8px; cursor: pointer;">
+                            <input type="checkbox" class="edit-role-checkbox" value="trainer" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span style="font-size: 14px; font-weight: 600;">🎓 Trainer</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Stations</label>
+                    <div id="editStaffStations" style="max-height: 220px; overflow-y: auto; border: 2px solid var(--border); border-radius: 10px; padding: 12px;"></div>
+                </div>
+                <div class="form-group">
+                    <label>Pool Assignment</label>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Select exactly 2 pools for this staff member</p>
+                    <div style="background: var(--bg); padding: 16px; border-radius: 10px; border: 2px solid var(--border);">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                            <label class="pool-card" data-pool="A">
+                                <input type="checkbox" class="edit-pool-input" value="A">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                    <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: white;">A</div>
+                                    <span style="font-size: 12px; font-weight: 600;">Pool A</span>
+                                </div>
+                            </label>
+                            <label class="pool-card" data-pool="B">
+                                <input type="checkbox" class="edit-pool-input" value="B">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                    <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: white;">B</div>
+                                    <span style="font-size: 12px; font-weight: 600;">Pool B</span>
+                                </div>
+                            </label>
+                            <label class="pool-card" data-pool="C">
+                                <input type="checkbox" class="edit-pool-input" value="C">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                    <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: white;">C</div>
+                                    <span style="font-size: 12px; font-weight: 600;">Pool C</span>
+                                </div>
+                            </label>
+                            <label class="pool-card" data-pool="D">
+                                <input type="checkbox" class="edit-pool-input" value="D">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                    <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: white;">D</div>
+                                    <span style="font-size: 12px; font-weight: 600;">Pool D</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div id="editPoolError" style="color: #ef4444; font-size: 12px; margin-top: 12px; display: none; font-weight: 600; text-align: center;">⚠️ Please select exactly 2 pools</div>
+                    </div>
+                </div>
+                <div id="editTrainingSection" class="wizard-section" style="display: none; gap: 12px;">
+                    <h4>Training Details</h4>
+                    <p class="wizard-note">Training profiles are excluded from automatic assignments unless requested during AI roster generation.</p>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Training Focus Area</label>
+                        <select id="editTrainingFocus" class="form-select">
+                            <option value="clinical">Clinical exposure</option>
+                            <option value="front">Front desk exposure</option>
+                            <option value="hybrid">Hybrid / cross-training</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>AI Assignment Preference</label>
+                        <select id="editTrainingPreference" class="form-select">
+                            <option value="prompt">Ask during AI generation (recommended)</option>
+                            <option value="omit">Skip automatically – manual assignment later</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Supervisor Notes</label>
+                        <textarea id="editTrainingNotes" class="form-textarea" placeholder="Optional notes for mentors or shift leads"></textarea>
+                    </div>
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="editStaffActive" style="width: 18px; height: 18px;">
+                    <label for="editStaffActive" style="margin: 0; font-size: 14px;">Active Staff Member</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="prPortal.closeModal('editStaffModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="prPortal.saveStaffEdits()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clear Schedule Modal -->
+    <div id="clearScheduleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🗑️ Clear Schedule</h2>
+                <button class="modal-close" onclick="prPortal.closeModal('clearScheduleModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
+                    ⚠️ Warning: This action cannot be undone. Please select what you want to clear:
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <label class="role-card" style="cursor: pointer;">
+                        <input type="radio" name="clearType" value="day" checked>
+                        <div class="role-card-content">
+                            <span class="role-card-title">📅 Clear Specific Day</span>
+                            <span class="role-card-desc">Remove all assignments for a single date</span>
+                        </div>
+                    </label>
+                    <label class="role-card" style="cursor: pointer;">
+                        <input type="radio" name="clearType" value="staff">
+                        <div class="role-card-content">
+                            <span class="role-card-title">👤 Clear Specific Staff</span>
+                            <span class="role-card-desc">Remove all assignments for one staff member</span>
+                        </div>
+                    </label>
+                    <label class="role-card" style="cursor: pointer;">
+                        <input type="radio" name="clearType" value="all">
+                        <div class="role-card-content">
+                            <span class="role-card-title">🗑️ Clear Everything</span>
+                            <span class="role-card-desc" style="color: #dc2626;">Remove ALL roster data (entire schedule)</span>
+                        </div>
+                    </label>
+                </div>
+                
+                <div id="clearDaySection" style="margin-top: 20px;">
+                    <label style="font-size: 13px; font-weight: 600; margin-bottom: 8px; display: block;">Select Date:</label>
+                    <input type="date" id="clearDayDate" class="form-input">
+                </div>
+                
+                <div id="clearStaffSection" style="margin-top: 20px; display: none;">
+                    <label style="font-size: 13px; font-weight: 600; margin-bottom: 8px; display: block;">Select Staff:</label>
+                    <select id="clearStaffSelect" class="form-select">
+                        <option value="">-- Select Staff --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="prPortal.closeModal('clearScheduleModal')">Cancel</button>
+                <button class="btn btn-danger" onclick="prPortal.executeClearSchedule()">🗑️ Clear Selected</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Leave Report Modal -->
+    <div id="exportLeaveModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📊 Export Leave Report</h2>
+                <button class="modal-close" onclick="prPortal.closeModal('exportLeaveModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Report Type</label>
+                    <select id="exportLeaveType" class="form-select">
+                        <option value="month">Full Month</option>
+                        <option value="dateRange">Date Range</option>
+                        <option value="staff">Specific Staff Member</option>
+                    </select>
+                </div>
+                <div id="exportDateRangeFields" style="display: none;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" id="exportStartDate" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="date" id="exportEndDate" class="form-input">
+                        </div>
+                    </div>
+                </div>
+                <div id="exportStaffField" style="display: none;">
+                    <div class="form-group">
+                        <label>Select Staff</label>
+                        <select id="exportStaffSelect" class="form-select">
+                            <option value="">Select staff member...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Export Format</label>
+                    <select id="exportFormat" class="form-select">
+                        <option value="pdf">PDF Document</option>
+                        <option value="excel">Excel Spreadsheet</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="prPortal.closeModal('exportLeaveModal')">Cancel</button>
+                <button class="btn btn-success" onclick="prPortal.exportLeaveReport()">📥 Download Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Roster Cell Edit Modal -->
+    <div id="editRosterCellModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="editCellTitle">Edit Assignment</h2>
+                <button class="modal-close" onclick="prPortal.closeModal('editRosterCellModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Station Assignment</label>
+                    <select id="editCellStation" class="form-select">
+                        <option value="">-- No Assignment --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Leave Type (if on leave)</label>
+                    <select id="editCellLeave" class="form-select">
+                        <option value="">-- Not on Leave --</option>
+                        <option value="AL">Annual Leave (AL)</option>
+                        <option value="SL">Sick Leave (SL)</option>
+                        <option value="ML">Medical Leave (ML)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="editCellNotes" class="form-textarea" rows="3" placeholder="Additional notes..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="prPortal.closeModal('editRosterCellModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="prPortal.saveRosterCell()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Roster Generation Modal -->
+    <div id="aiGeneratorModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>🤖 AI Roster Generation</h2>
+                <button class="modal-close" onclick="prPortal.closeModal('aiGeneratorModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); padding: 20px; border-radius: 12px; color: white; margin-bottom: 20px;">
+                    <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">✨ Intelligent Roster Generation</h3>
+                    <p style="font-size: 14px; opacity: 0.9;">Generate staff roster automatically based on doctor schedules from the PR Clinical Display and Telegram integration.</p>
+                </div>
+                
+                <div style="background: var(--card); padding: 16px; border-radius: 10px; margin-bottom: 20px;">
+                    <h4 style="font-weight: 700; margin-bottom: 12px; color: var(--primary);">📋 How it works:</h4>
+                    <ul style="margin-left: 20px; font-size: 14px; line-height: 1.8;">
+                        <li>Analyzes doctor duty schedules from PR Clinical Roster</li>
+                        <li>Assigns clinical staff to specialties based on doctor presence</li>
+                        <li>Allocates front desk staff (2 per day)</li>
+                        <li>Uses AI Configuration settings for optimal distribution</li>
+                    </ul>
+                </div>
+                
+                <div class="form-group">
+                    <label>Start Date (16th of month)</label>
+                    <input type="date" id="aiGenStartDate" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>End Date (15th of next month)</label>
+                    <input type="date" id="aiGenEndDate" class="form-input">
+                </div>
+                
+                <!-- Doctor Schedule Viewer - Always Visible -->
+                <div style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); padding: 16px; border-radius: 10px; margin-top: 16px; border: 2px solid #8b5cf6;">
+                    <h4 style="font-weight: 700; color: #8b5cf6; margin: 0 0 12px 0;">📅 Doctors On Duty</h4>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label style="font-size: 13px; font-weight: 600;">Select Date (Today or Future Only)</label>
+                        <input type="date" id="doctorViewDate" class="form-input" onchange="prPortal.loadDoctorScheduleForDate()">
+                    </div>
+                    <div id="doctorScheduleList" style="max-height: 350px; overflow-y: auto; background: white; border-radius: 8px; padding: 12px;">
+                        <div style="text-align: center; color: var(--text-muted); padding: 30px; font-size: 14px;">
+                            <div style="font-size: 48px; margin-bottom: 12px;">👨‍⚕️</div>
+                            <p style="margin: 0; font-weight: 600;">Loading today's schedule...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #fef2f2; border: 2px solid #fca5a5; padding: 16px; border-radius: 10px; margin-top: 16px;">
+                    <p style="font-size: 13px; color: #991b1b; font-weight: 600;">
+                        ⚠️ Warning: This will overwrite existing roster data for the selected date range!
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="prPortal.closeModal('aiGeneratorModal')">Cancel</button>
+                <button class="btn btn-success" onclick="prPortal.generateRoster()" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                    🤖 Generate Roster
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Assistant Styles & Script -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai-assistant.css') }}">
+    <script src="{{ url_for('static', filename='js/ai-assistant.js') }}"></script>
+    
+    <script src="{{ url_for('static', filename='js/pr_portal_light.js') }}?v={{ range(1000000, 9999999) | random }}&build={{ range(10000000, 99999999) | random }}"></script>
+</body>
+</html>

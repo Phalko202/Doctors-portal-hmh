@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reset Password</title>
+  <link rel="stylesheet" href="/static/css/admin.css" />
+  <style>
+    .wrap{max-width:380px;margin:60px auto;background:var(--panel);padding:24px;border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.25)}
+    h1{margin:0 0 14px;font-size:24px;font-weight:800;text-align:center}
+    .error{color:#ff7b7b;font-size:12px;min-height:16px;margin-top:6px;text-align:center}
+    button{width:100%;margin-top:12px}
+    .hint{color:var(--muted);font-size:12px;margin:8px 0 0;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Reset Password</h1>
+    <form id="resetForm">
+      <label>Username
+        <input id="u" autocomplete="username" required />
+      </label>
+      <label>New password
+        <input id="p1" type="password" autocomplete="new-password" required />
+      </label>
+      <label>Confirm password
+        <input id="p2" type="password" autocomplete="new-password" required />
+      </label>
+      <div class="error" id="err"></div>
+      <button type="submit">Update password</button>
+      <div class="hint"><a href="/login">Back to login</a></div>
+    </form>
+  </div>
+  <script>
+    const err = document.getElementById('err');
+    document.getElementById('resetForm').addEventListener('submit', async e=>{
+      e.preventDefault();
+      err.textContent = '';
+      const username = document.getElementById('u').value.trim();
+      const p1 = document.getElementById('p1').value.trim();
+      const p2 = document.getElementById('p2').value.trim();
+      if(p1.length < 4){ err.textContent = 'Password must be at least 4 characters'; return; }
+      if(p1 !== p2){ err.textContent = 'Passwords do not match'; return; }
+      try{
+        const res = await fetch('/reset', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username, password: p1})});
+        const j = await res.json().catch(()=>({}));
+        if(!res.ok || !j.ok){ throw new Error(j.error || 'Failed'); }
+        alert('Password updated. You can now login.');
+        location.href = '/login';
+      }catch(e){ err.textContent = e.message || 'Failed to update password'; }
+    });
+  </script>
+</body>
+</html>

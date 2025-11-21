@@ -1,0 +1,1 @@
+Placeholder: add your official Hulhumale' Hospital logo as PNG named hulhumale-logo.png in this folder. This text file exists to mark the expected file path /static/img/hulhumale-logo.png
