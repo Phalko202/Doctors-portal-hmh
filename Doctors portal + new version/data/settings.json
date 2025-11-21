@@ -1,0 +1,13 @@
+{
+  "patient_display": {
+    "rotate_ms": 3000,
+    "show_room": true,
+    "show_breaks": true,
+    "show_start_time": true,
+    "exclusive_multirow_specialty": false,
+    "per_specialty_slides": false,
+    "flat_mode": false,
+    "display_resolution": "1280x720",
+    "fill_mode": "auto"
+  }
+}

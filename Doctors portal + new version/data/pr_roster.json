@@ -1,0 +1,42 @@
+{
+  "1763234181841": {
+    "2025-11-15": {
+      "station": "orthopaedics",
+      "leave": "",
+      "shift_start": "14:30",
+      "shift_end": "22:30",
+      "notes": "Auto: Orthopaedics - Doctor"
+    },
+    "2025-11-16": {
+      "station": "internal-medicine",
+      "leave": "",
+      "shift_start": "14:30",
+      "shift_end": "22:30",
+      "notes": "Auto: Internal Medicine - Dr. Hatem Hassan Mohamed Abdelhafez"
+    },
+    "2025-11-19": {
+      "station": "internal-medicine",
+      "leave": "",
+      "shift_start": "14:30",
+      "shift_end": "22:30",
+      "notes": "Auto: Internal Medicine - Dr. Aminath Munaza"
+    }
+  },
+  "1763547359848": {
+    "2025-11-15": {
+      "station": "1763279166216",
+      "leave": "",
+      "notes": "Auto: Front desk"
+    },
+    "2025-11-16": {
+      "station": "1763279166216",
+      "leave": "",
+      "notes": "Auto: Front desk"
+    },
+    "2025-11-19": {
+      "station": "1763279166216",
+      "leave": "",
+      "notes": "Auto: Front desk"
+    }
+  }
+}

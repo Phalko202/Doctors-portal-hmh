@@ -1,0 +1,2886 @@
+{
+  "specialty_order": [
+    "Internal Medicine",
+    "Paediatrics",
+    "Orthopaedics",
+    "Dental",
+    "Gynaecology",
+    "Nephrology",
+    "Pulmonology",
+    "Ophthalmology",
+    "ENT",
+    "Psychiatry",
+    "General Surgery",
+    "Oral Maxillo facial surgery (OMS)",
+    "Cardiology",
+    "Dermatology",
+    "Endocrinology"
+  ],
+  "doctors": [
+    {
+      "id": 1,
+      "name": "Dr. Asish Rajak",
+      "specialty": "Orthopaedics",
+      "keywords": [
+        "asish",
+        "rajak"
+      ],
+      "image_version": 1,
+      "last_update": "2025-08-27T17:09:50.536546Z",
+      "for_date": "2025-08-27",
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "ON_DUTY",
+          "start_time": "23:00",
+          "room": "2",
+          "patient_count": 50,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 20
+            },
+            {
+              "range": "12:10-15:00",
+              "count": 30
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "designation": "Orthopaedician",
+          "last_update": "2025-09-01T22:05:02.059108Z"
+        },
+        "2025-09-05": {
+          "designation": "Orthopaedician",
+          "start_time": "10:00",
+          "room": "6",
+          "patient_count": 35,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 15
+            }
+          ],
+          "breaks": [
+            "NO BREAK"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-03T02:57:55.701437Z",
+          "status_reason": "Sick Leave",
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 20
+            }
+          ],
+          "before_break_opd_patients": 20,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 15
+            }
+          ],
+          "after_break_opd_patients": 15
+        },
+        "2025-09-07": {
+          "status": "OFF_DUTY",
+          "status_reason": "OPD cancelled",
+          "last_update": "2025-09-03T02:17:40.124361Z"
+        },
+        "2025-09-08": {
+          "status": "OFF_DUTY",
+          "status_reason": "OPD cancelled",
+          "last_update": "2025-09-03T00:59:09.885558Z"
+        },
+        "2025-09-03": {
+          "status": "SICK",
+          "status_reason": "Sick Leave",
+          "last_update": "2025-09-03T02:44:48.039899Z",
+          "designation": "Orthopaedician",
+          "start_time": "10:00",
+          "patient_count": 35,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 20
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 15
+            }
+          ],
+          "breaks": [
+            "NO BREAK"
+          ]
+        },
+        "2025-09-17": {
+          "designation": "Orthopaedician",
+          "start_time": "10:00",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 20
+            }
+          ],
+          "before_break_opd_patients": 20,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 15
+            }
+          ],
+          "after_break_opd_patients": 15,
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-17T10:32:56.668249Z",
+          "status_reason": "Sick Leave"
+        },
+        "2025-09-18": {
+          "status": "SICK",
+          "status_reason": "Sick Leave",
+          "last_update": "2025-09-17T10:29:04.135670Z"
+        },
+        "2025-09-23": {
+          "status": "LEAVE",
+          "status_reason": "Leave (23/09/2025 till 26/09/2025)",
+          "last_update": "2025-09-23T07:29:09.806144Z"
+        },
+        "2025-09-24": {
+          "status": "ON_DUTY",
+          "status_reason": "Leave (23/09/2025 till 26/09/2025)",
+          "last_update": "2025-09-24T16:23:33.393597Z",
+          "start_time": "10:00",
+          "room": "k102",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ]
+        },
+        "2025-09-25": {
+          "status": "LEAVE",
+          "status_reason": "Leave (23/09/2025 till 26/09/2025)",
+          "last_update": "2025-09-23T07:29:09.806416Z"
+        },
+        "2025-09-26": {
+          "status": "LEAVE",
+          "status_reason": "Leave (23/09/2025 till 26/09/2025)",
+          "last_update": "2025-09-23T07:29:09.806522Z"
+        },
+        "2025-09-28": {
+          "designation": "Orthopaedician",
+          "start_time": "11:00",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "SICK",
+          "last_update": "2025-09-28T15:03:57.587743Z",
+          "room": "K104",
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "status_reason": "Sick Leave"
+        },
+        "2025-09-30": {
+          "start_time": "11:00",
+          "room": "K104",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "SICK",
+          "last_update": "2025-09-30T12:20:27.258631Z",
+          "status_reason": "Sick Leave"
+        },
+        "2025-11-03": {
+          "start_time": "8",
+          "status": "LEAVE",
+          "room": "K104",
+          "patient_count": 30,
+          "before_break_opd_patients": 15,
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "after_break_opd_patients": 15,
+          "last_update": "2025-11-02T21:32:16.166101Z",
+          "status_reason": "Medical Leave"
+        }
+      },
+      "status": "PENDING",
+      "status_reason": "Medical leave",
+      "start_time": ""
+    },
+    {
+      "id": 3,
+      "name": "Dr. Ahmed Azim Abdul Shakoor",
+      "specialty": "Orthopaedics",
+      "keywords": [
+        "ahmed",
+        "azim"
+      ],
+      "image_version": 1,
+      "last_update": "2025-08-24T12:34:03.590816Z",
+      "for_date": "2025-08-24",
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "PENDING",
+          "status_reason": "",
+          "start_time": "09:00",
+          "room": "K102",
+          "patient_count": null,
+          "opd": [],
+          "breaks": [],
+          "designation": "ortho",
+          "last_update": "2025-09-01T22:05:02.059167Z"
+        },
+        "2025-09-24": {
+          "start_time": "10:00",
+          "room": "k104",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 20,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 50,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00",
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-24T16:47:57.237720Z"
+        },
+        "2025-09-30": {
+          "start_time": "11:00",
+          "room": "K104",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-30T06:08:52.692583Z"
+        },
+        "2025-11-03": {
+          "start_time": "8",
+          "status": "ON_CALL",
+          "room": "3",
+          "patient_count": 30,
+          "before_break_opd_patients": 15,
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "after_break_opd_patients": 15,
+          "last_update": "2025-11-02T20:48:47.715301Z"
+        }
+      },
+      "notes": "",
+      "start_time": "",
+      "status": "PENDING",
+      "designation": "ortho",
+      "room": "K102"
+    },
+    {
+      "id": 5,
+      "name": "Dr. Hatem Hassan Mohamed Abdelhafez",
+      "specialty": "Internal Medicine",
+      "keywords": [
+        "hatem",
+        "hassan"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "last_update": "2025-08-19T14:58:11.113262Z",
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059184Z"
+        },
+        "2025-09-25": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T18:13:45.301183Z"
+        },
+        "2025-09-26": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T19:05:32.132913Z"
+        },
+        "2025-09-30": {
+          "start_time": "11:00",
+          "room": "K104",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-30T06:08:55.343837Z"
+        },
+        "2025-10-31": {
+          "start_time": "15:00",
+          "patient_count": 20,
+          "before_break_opd": [
+            {
+              "range": "15:00-18:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "19:00-20:00",
+              "count": 10
+            }
+          ],
+          "after_break_opd_patients": 10,
+          "opd": [
+            {
+              "range": "15:00-18:00",
+              "count": 10
+            },
+            {
+              "range": "19:00-20:00",
+              "count": 10
+            }
+          ],
+          "breaks": [
+            "18:00-19:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-10-30T22:54:39.066463Z"
+        },
+        "2025-11-04": {
+          "start_time": "8:00",
+          "room": "Dental room 138",
+          "patient_count": 25,
+          "before_break_opd": [
+            {
+              "range": "8:00-12:00"
+            }
+          ],
+          "before_break_opd_patients": 15,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00"
+            }
+          ],
+          "after_break_opd_patients": 10,
+          "opd": [
+            {
+              "range": "8:00-12:00"
+            },
+            {
+              "range": "13:00-14:00"
+            }
+          ],
+          "breaks": [
+            "12:00-13:00"
+          ],
+          "status": "SICK",
+          "last_update": "2025-11-04T10:27:17.853963Z",
+          "status_reason": " (04/11/2025 to 05/11/2025)"
+        },
+        "2025-11-05": {
+          "status": "SICK",
+          "status_reason": " (04/11/2025 to 05/11/2025)",
+          "last_update": "2025-11-04T10:27:17.854220Z"
+        },
+        "2025-11-06": {
+          "start_time": "8:00",
+          "room": "Dental room 138",
+          "patient_count": 25,
+          "before_break_opd": [
+            {
+              "range": "8:00-12:00"
+            }
+          ],
+          "before_break_opd_patients": 15,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00"
+            }
+          ],
+          "after_break_opd_patients": 10,
+          "opd": [
+            {
+              "range": "8:00-12:00"
+            },
+            {
+              "range": "13:00-14:00"
+            }
+          ],
+          "breaks": [
+            "12:00-13:00"
+          ],
+          "status": "SICK",
+          "last_update": "2025-11-06T10:35:09.857153Z",
+          "status_reason": " (06/11/2025 to 06/11/2025)"
+        },
+        "2025-11-08": {
+          "start_time": "08:00:00",
+          "status": "ON_DUTY",
+          "room": "K105",
+          "patient_count": 20,
+          "before_break_opd_patients": 15,
+          "breaks": [
+            "08:00-12:00",
+            "12:00-13:00",
+            "13:00-14:00"
+          ],
+          "after_break_opd_patients": 15,
+          "last_update": "2025-11-07T11:10:28.196689Z"
+        },
+        "2025-11-09": {
+          "start_time": "8:00",
+          "room": "Dental room 138",
+          "patient_count": 25,
+          "before_break_opd": [
+            {
+              "range": "8:00-12:00"
+            }
+          ],
+          "before_break_opd_patients": 15,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00"
+            }
+          ],
+          "after_break_opd_patients": 10,
+          "opd": [
+            {
+              "range": "8:00-12:00"
+            },
+            {
+              "range": "13:00-14:00"
+            }
+          ],
+          "breaks": [
+            "12:00-13:00"
+          ],
+          "status": "SICK",
+          "last_update": "2025-11-09T09:58:15.569954Z",
+          "status_reason": " (09/11/2025 to 09/11/2025)"
+        },
+        "2025-11-16": {
+          "start_time": "8:20",
+          "room": "Dental room 138",
+          "patient_count": 25,
+          "before_break_opd": [
+            {
+              "range": "8:00-12:00"
+            }
+          ],
+          "before_break_opd_patients": 15,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00"
+            }
+          ],
+          "after_break_opd_patients": 10,
+          "opd": [
+            {
+              "range": "8:00-12:00"
+            },
+            {
+              "range": "13:00-14:00"
+            }
+          ],
+          "breaks": [
+            "12:00-13:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-11-16T15:52:18.422794Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING",
+      "room": "Dental room 138",
+      "patient_count": 25,
+      "opd": [
+        {
+          "range": "8:00-12:00"
+        },
+        {
+          "range": "13:00-14:00"
+        }
+      ],
+      "breaks": [
+        "11:00-12:00"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Dr. Cho Thway Mon",
+      "specialty": "Internal Medicine",
+      "keywords": [
+        "cho",
+        "thway",
+        "mon"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059191Z"
+        },
+        "2025-09-25": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T18:28:21.946989Z"
+        },
+        "2025-11-03": {
+          "start_time": "10:05:00",
+          "status": "ON_DUTY",
+          "room": "room 5",
+          "patient_count": 25,
+          "before_break_opd_patients": 14,
+          "breaks": [
+            "12:00-13:00"
+          ],
+          "after_break_opd_patients": 16,
+          "last_update": "2025-11-02T20:48:47.703189Z"
+        },
+        "2025-11-06": {
+          "start_time": "09:00:00",
+          "status": "ON_DUTY",
+          "room": "K104",
+          "patient_count": 30,
+          "breaks": [
+            "11:00-12:00",
+            "12:00-14:00",
+            "08:00-11:00"
+          ],
+          "last_update": "2025-11-06T10:43:29.667890Z"
+        },
+        "2025-11-08": {
+          "start_time": "08:00:00",
+          "status": "ON_DUTY",
+          "room": "132",
+          "patient_count": 20,
+          "before_break_opd_patients": 15,
+          "breaks": [
+            "08:00-12:00",
+            "12:00-13:00",
+            "13:00-14:00"
+          ],
+          "after_break_opd_patients": 15,
+          "last_update": "2025-11-07T11:10:28.194386Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 7,
+      "name": "Dr. Mihuna Ibrahim",
+      "specialty": "Internal Medicine",
+      "keywords": [
+        "mihuna",
+        "ibrahim"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059198Z"
+        },
+        "2025-09-25": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T18:28:36.305067Z"
+        },
+        "2025-09-26": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T19:05:37.246125Z"
+        },
+        "2025-09-28": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-28T14:23:40.123548Z"
+        },
+        "2025-11-08": {
+          "start_time": "08:00:00",
+          "status": "ON_DUTY",
+          "room": "K109",
+          "patient_count": 30,
+          "before_break_opd_patients": 15,
+          "breaks": [
+            "08:00-12:00",
+            "12:00-13:00",
+            "13:00-14:00"
+          ],
+          "after_break_opd_patients": 15,
+          "last_update": "2025-11-07T11:10:28.197296Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 8,
+      "name": "Dr. Aminath Munaza",
+      "specialty": "Internal Medicine",
+      "keywords": [
+        "aminath",
+        "munaza"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059204Z"
+        },
+        "2025-09-25": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T18:29:48.767145Z"
+        },
+        "2025-09-26": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T19:13:54.076922Z"
+        },
+        "2025-11-03": {
+          "start_time": "10:00:00",
+          "status": "ON_DUTY",
+          "room": "dental room 138",
+          "patient_count": 30,
+          "before_break_opd_patients": 15,
+          "breaks": [
+            "12:00-13:00"
+          ],
+          "after_break_opd_patients": 15,
+          "last_update": "2025-11-02T20:48:47.701939Z"
+        },
+        "2025-11-06": {
+          "start_time": "08:00:00",
+          "status": "ON_DUTY",
+          "room": "138",
+          "patient_count": 20,
+          "breaks": [
+            "11:00-12:00",
+            "12:00-14:00",
+            "08:00-11:00"
+          ],
+          "last_update": "2025-11-06T10:43:29.665756Z"
+        },
+        "2025-11-08": {
+          "start_time": "08:00:00",
+          "status": "ON_DUTY",
+          "room": "138",
+          "patient_count": 30,
+          "before_break_opd_patients": 15,
+          "breaks": [
+            "08:00-12:00",
+            "12:00-13:00",
+            "13:00-14:00"
+          ],
+          "after_break_opd_patients": 15,
+          "last_update": "2025-11-07T11:10:28.193658Z"
+        },
+        "2025-11-19": {
+          "start_time": "8:20",
+          "status": "ON_DUTY",
+          "room": "Dental room 138",
+          "patient_count": 25,
+          "before_break_opd_patients": 15,
+          "breaks": [
+            "12:00-13:00"
+          ],
+          "after_break_opd_patients": 10,
+          "last_update": "2025-11-19T12:00:28.117754Z",
+          "status_reason": " (19/11/2025 to 19/11/2025)",
+          "before_break_opd": [
+            {
+              "range": "8:00-12:00"
+            }
+          ],
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00"
+            }
+          ],
+          "opd": [
+            {
+              "range": "8:00-12:00"
+            },
+            {
+              "range": "13:00-14:00"
+            }
+          ]
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 9,
+      "name": "Dr. Alisha Joshi",
+      "specialty": "Paediatrics",
+      "keywords": [
+        "alisha",
+        "joshi"
+      ],
+      "image_version": 1,
+      "for_date": "2025-08-24",
+      "last_update": "2025-08-24T12:34:03.613019Z",
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "room": "5",
+          "patient_count": null,
+          "opd": [],
+          "breaks": [],
+          "designation": "Orthopaedician",
+          "last_update": "2025-09-01T22:05:02.059211Z"
+        },
+        "2025-09-23": {
+          "status": "ON_DUTY",
+          "status_reason": "Sick Leave",
+          "last_update": "2025-09-23T09:32:11.277514Z",
+          "designation": "Paediatrics",
+          "start_time": "10:00",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ]
+        },
+        "2025-09-24": {
+          "designation": "Paediatrics",
+          "start_time": "10:00",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-24T15:42:26.640966Z",
+          "status_reason": "Sick Leave",
+          "room": "k101"
+        },
+        "2025-09-30": {
+          "start_time": "12:00",
+          "room": "K104",
+          "patient_count": 10,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "breaks": [
+            "NO BREAK"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-30T12:22:11.032613Z"
+        },
+        "2025-10-08": {
+          "start_time": "12:00",
+          "room": "K104",
+          "patient_count": 10,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "breaks": [
+            "NO BREAK"
+          ],
+          "status": "SICK",
+          "last_update": "2025-10-08T12:28:03.446817Z",
+          "status_reason": "Sick Leave"
+        },
+        "2025-09-10": {
+          "status": "SICK",
+          "status_reason": "Sick Leave",
+          "last_update": "2025-10-08T12:27:39.397424Z"
+        },
+        "2025-09-08": {
+          "status": "SICK",
+          "status_reason": "Sick Leave",
+          "last_update": "2025-10-08T12:27:52.996218Z"
+        },
+        "2025-11-03": {
+          "start_time": "9",
+          "status": "LEAVE",
+          "last_update": "2025-11-02T22:30:29.971649Z",
+          "status_reason": "Medical Leave"
+        },
+        "2025-11-06": {
+          "status": "LEAVE",
+          "status_reason": " (06/11/2025 to 20/11/2025)",
+          "last_update": "2025-11-06T10:26:07.042726Z"
+        },
+        "2025-11-09": {
+          "status": "LEAVE",
+          "status_reason": " (06/11/2025 to 20/11/2025)",
+          "last_update": "2025-11-06T10:26:07.043001Z"
+        },
+        "2025-11-10": {
+          "status": "LEAVE",
+          "status_reason": " (06/11/2025 to 20/11/2025)",
+          "last_update": "2025-11-06T10:26:07.043086Z"
+        },
+        "2025-11-11": {
+          "status": "LEAVE",
+          "status_reason": " (06/11/2025 to 20/11/2025)",
+          "last_update": "2025-11-06T10:26:07.043164Z"
+        },
+        "2025-11-12": {
+          "status": "LEAVE",
+          "status_reason": " (06/11/2025 to 20/11/2025)",
+          "last_update": "2025-11-06T10:26:07.043238Z"
+        },
+        "2025-11-13": {
+          "status": "LEAVE",
+          "status_reason": " (06/11/2025 to 20/11/2025)",
+          "last_update": "2025-11-06T10:26:07.043287Z"
+        },
+        "2025-11-15": {
+          "status": "LEAVE",
+          "status_reason": " (06/11/2025 to 20/11/2025)",
+          "last_update": "2025-11-06T10:26:07.043399Z"
+        },
+        "2025-11-16": {
+          "status": "LEAVE",
+          "status_reason": " (06/11/2025 to 20/11/2025)",
+          "last_update": "2025-11-06T10:26:07.043471Z"
+        },
+        "2025-11-17": {
+          "status": "LEAVE",
+          "status_reason": " (06/11/2025 to 20/11/2025)",
+          "last_update": "2025-11-06T10:26:07.043541Z"
+        },
+        "2025-11-18": {
+          "status": "LEAVE",
+          "status_reason": " (06/11/2025 to 20/11/2025)",
+          "last_update": "2025-11-06T10:26:07.043608Z"
+        },
+        "2025-11-19": {
+          "status": "LEAVE",
+          "status_reason": " (06/11/2025 to 20/11/2025)",
+          "last_update": "2025-11-06T10:26:07.043674Z"
+        },
+        "2025-11-20": {
+          "status": "LEAVE",
+          "status_reason": " (06/11/2025 to 20/11/2025)",
+          "last_update": "2025-11-06T10:26:07.043742Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 11,
+      "name": "Dr. Alaa Adel Ahmed Sayed Ahmed Sobeih Elamawey",
+      "specialty": "Paediatrics",
+      "keywords": [
+        "alaa",
+        "adel"
+      ],
+      "image_version": 1,
+      "for_date": "2025-08-26",
+      "last_update": "2025-08-26T19:35:39.733708Z",
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059223Z"
+        },
+        "2025-09-17": {
+          "status": "LEAVE",
+          "status_reason": "Leave",
+          "last_update": "2025-09-17T08:10:46.295457Z"
+        },
+        "2025-09-23": {
+          "status_reason": "OPD cancelled",
+          "status": "OFF_DUTY",
+          "last_update": "2025-09-23T09:33:34.680672Z",
+          "designation": "Paediatrics",
+          "start_time": "10:00",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ]
+        },
+        "2025-09-24": {
+          "designation": "Paediatrics",
+          "start_time": "10:00",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 20
+            }
+          ],
+          "before_break_opd_patients": 20,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 15
+            }
+          ],
+          "after_break_opd_patients": 15,
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "SICK",
+          "last_update": "2025-09-24T15:46:49.640393Z",
+          "status_reason": "Sick Leave"
+        },
+        "2025-09-25": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T18:08:17.995927Z"
+        },
+        "2025-09-30": {
+          "start_time": "11:00",
+          "room": "K104",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-30T06:09:08.343371Z"
+        },
+        "2025-11-03": {
+          "start_time": "08:00:00",
+          "status": "ON_DUTY",
+          "last_update": "2025-11-02T20:48:47.710153Z"
+        }
+      },
+      "status": "PENDING",
+      "status_reason": "OPD cancelled",
+      "start_time": ""
+    },
+    {
+      "id": 12,
+      "name": "Dr. Zarina Kabilova",
+      "specialty": "Gynaecology",
+      "keywords": [
+        "zarina",
+        "kabilova"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059230Z"
+        },
+        "2025-09-28": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-28T14:22:26.363110Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 13,
+      "name": "Dr. Hawwa Inaya",
+      "specialty": "Gynaecology",
+      "keywords": [
+        "hawwa",
+        "inaya"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059236Z"
+        },
+        "2025-09-25": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T18:38:06.092095Z"
+        },
+        "2025-09-26": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T19:06:03.855109Z"
+        },
+        "2025-09-30": {
+          "start_time": "11:00",
+          "room": "K104",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-30T06:09:02.101917Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 15,
+      "name": "Dr. Aminath Juhaina",
+      "specialty": "Gynaecology",
+      "keywords": [
+        "aminath",
+        "juhaina"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059248Z"
+        },
+        "2025-09-30": {
+          "start_time": "11:00",
+          "room": "K104",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-30T06:09:05.677838Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 16,
+      "name": "Dr. Muhammad Mujtaba Ur Rehman",
+      "specialty": "Nephrology",
+      "keywords": [
+        "muhammad",
+        "mujtaba"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059254Z"
+        },
+        "2025-09-25": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T18:37:51.105688Z"
+        },
+        "2025-09-26": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T19:05:47.739174Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 17,
+      "name": "Dr. Ahmed Gamal Youssef Meselhi",
+      "specialty": "Pulmonology",
+      "keywords": [
+        "ahmed",
+        "gamal"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059260Z"
+        },
+        "2025-09-25": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T18:37:58.190032Z"
+        },
+        "2025-09-26": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T19:05:56.453827Z"
+        },
+        "2025-10-08": {
+          "start_time": "12:00",
+          "room": "K104",
+          "patient_count": 10,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "breaks": [
+            "NO BREAK"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-10-08T13:04:45.663983Z"
+        },
+        "2025-10-18": {
+          "start_time": "15:00",
+          "room": "2",
+          "patient_count": 20,
+          "before_break_opd": [
+            {
+              "range": "15:00-18:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "19:00-20:00",
+              "count": 10
+            }
+          ],
+          "after_break_opd_patients": 10,
+          "opd": [
+            {
+              "range": "15:00-18:00",
+              "count": 10
+            },
+            {
+              "range": "19:00-20:00",
+              "count": 10
+            }
+          ],
+          "breaks": [
+            "18:00-19:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-10-18T10:37:19.431476Z"
+        },
+        "2025-10-19": {
+          "start_time": "15:00",
+          "room": "2",
+          "patient_count": 20,
+          "before_break_opd": [
+            {
+              "range": "15:00-18:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "19:00-20:00",
+              "count": 10
+            }
+          ],
+          "after_break_opd_patients": 10,
+          "opd": [
+            {
+              "range": "15:00-18:00",
+              "count": 10
+            },
+            {
+              "range": "19:00-20:00",
+              "count": 10
+            }
+          ],
+          "breaks": [
+            "18:00-19:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-10-19T11:06:59.503386Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING",
+      "promo_version": 2
+    },
+    {
+      "id": 18,
+      "name": "Dr. Nishesh Raj Shrestha",
+      "specialty": "ENT",
+      "keywords": [
+        "nishesh",
+        "raj"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059266Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 19,
+      "name": "Dr. Rachit Pokharel",
+      "specialty": "ENT",
+      "keywords": [
+        "rachit",
+        "pokharel"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059272Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 20,
+      "name": "Dr. Roxy Devi Chirom",
+      "specialty": "Ophthalmology",
+      "keywords": [
+        "roxy",
+        "devi"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059282Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 21,
+      "name": "Dr. Nafeesa Abdul Latheef",
+      "specialty": "Ophthalmology",
+      "keywords": [
+        "nafeesa",
+        "abdul"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059288Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 22,
+      "name": "Dr. Remon Girgis Lamee Girgis",
+      "specialty": "Ophthalmology",
+      "keywords": [
+        "rremon",
+        "girgis"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059294Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 23,
+      "name": "Dr. Maumoon Shareef",
+      "specialty": "Psychiatry",
+      "keywords": [
+        "maumoon",
+        "shareef"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059301Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 24,
+      "name": "Dr. Benjamin Premkumar",
+      "specialty": "Dental",
+      "keywords": [
+        "benjamin",
+        "premkumar"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059307Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 25,
+      "name": "Dr. Aishath Suha Ali",
+      "specialty": "Dental",
+      "keywords": [
+        "aishath",
+        "suha"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059313Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 26,
+      "name": "Dr. Safa Abdul Gayyoom",
+      "specialty": "Dental",
+      "keywords": [
+        "safa",
+        "abdul"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059319Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 27,
+      "name": "Dr. Aminath Khazna Musthafa",
+      "specialty": "Dental",
+      "keywords": [
+        "aminath",
+        "khazna"
+      ],
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "start_time": "08:00",
+          "last_update": "2025-09-01T22:05:02.059325Z"
+        }
+      },
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": 28,
+      "name": "Dr. Arpita Singh",
+      "specialty": "Oral Maxillo facial surgery (OMS)",
+      "keywords": [],
+      "image_version": 1,
+      "for_date": "2025-08-24",
+      "last_update": "2025-08-24T12:34:03.573372Z",
+      "schedule_by_date": {
+        "2025-09-02": {
+          "status": "OFF_DUTY",
+          "status_reason": "",
+          "start_time": "08:00",
+          "room": "",
+          "patient_count": null,
+          "opd": [],
+          "breaks": [],
+          "designation": "",
+          "last_update": "2025-09-01T22:05:02.059333Z"
+        },
+        "2025-09-06": {
+          "designation": "OMS",
+          "start_time": "12:00",
+          "room": "136",
+          "patient_count": 10,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 5
+            },
+            {
+              "range": "12:10-15:00",
+              "count": 5
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-02T00:56:47.140999Z"
+        },
+        "2025-09-24": {
+          "status": "ON_DUTY",
+          "status_reason": "Sick Leave",
+          "last_update": "2025-09-24T16:48:28.486310Z",
+          "start_time": "11:00",
+          "room": "Dental",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ]
+        },
+        "2025-09-25": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T18:37:47.689810Z"
+        }
+      },
+      "notes": "",
+      "start_time": "",
+      "status": "PENDING"
+    },
+    {
+      "id": "29",
+      "name": "Dr. Anas Mohamed Anwar Ahmed Ali",
+      "specialty": "Psychiatry",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-25": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T18:38:36.282166Z"
+        },
+        "2025-09-26": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T19:05:19.082462Z"
+        }
+      }
+    },
+    {
+      "id": "2",
+      "name": "Dr. Joshila Chanu Yumnam Bhattarai",
+      "specialty": "Gynaecology",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {}
+    },
+    {
+      "id": "4",
+      "name": "Dr. Rubeena Badar Khan",
+      "specialty": "Gynaecology",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {}
+    },
+    {
+      "id": "10",
+      "name": "Dr. Jumailath Beygum",
+      "specialty": "Gynaecology",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {}
+    },
+    {
+      "id": "30",
+      "name": "Dr. Ei Shwe Yee Myint",
+      "specialty": "Internal Medicine",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-25": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T18:29:43.281149Z"
+        },
+        "2025-09-26": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T19:13:56.872252Z"
+        },
+        "2025-11-03": {
+          "start_time": "10:01:00",
+          "status": "ON_DUTY",
+          "room": "room 6",
+          "patient_count": 25,
+          "before_break_opd_patients": 15,
+          "breaks": [
+            "12:00-13:00"
+          ],
+          "after_break_opd_patients": 10,
+          "last_update": "2025-11-02T20:48:47.704076Z"
+        },
+        "2025-11-08": {
+          "start_time": "08:00:00",
+          "status": "ON_DUTY",
+          "room": "K101",
+          "patient_count": 30,
+          "before_break_opd_patients": 15,
+          "breaks": [
+            "08:00-12:00",
+            "12:00-13:00",
+            "13:00-14:00"
+          ],
+          "after_break_opd_patients": 15,
+          "last_update": "2025-11-07T11:10:28.195764Z"
+        }
+      }
+    },
+    {
+      "id": "31",
+      "name": "Dr. Saroj Thapa",
+      "specialty": "Internal Medicine",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-25": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T18:29:59.284316Z"
+        },
+        "2025-09-26": {
+          "start_time": "11:00",
+          "room": "Dental Room 136",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-25T19:05:43.350829Z"
+        }
+      }
+    },
+    {
+      "id": "32",
+      "name": "Dr. Yi Nwe Soe",
+      "specialty": "Paediatrics",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-11-03": {
+          "start_time": "15",
+          "status": "ON_DUTY",
+          "last_update": "2025-11-02T20:48:47.712906Z"
+        }
+      }
+    },
+    {
+      "id": "33",
+      "name": "Dr. Roshan Kumar Dikshit",
+      "specialty": "Paediatrics",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-02": {
+          "start_time": "08:00",
+          "status": "PENDING",
+          "last_update": "2025-09-02T01:12:31.581373Z"
+        },
+        "2025-11-03": {
+          "start_time": "7",
+          "status": "ON_DUTY",
+          "last_update": "2025-11-02T20:48:47.711948Z"
+        }
+      }
+    },
+    {
+      "id": "34",
+      "name": "Dr. Aminath Dhunyana",
+      "specialty": "Dental",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {}
+    },
+    {
+      "id": "35",
+      "name": "Dr. Mariyam Afza Zuhair",
+      "specialty": "Dental",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {}
+    },
+    {
+      "id": "36",
+      "name": "Dr. Khine Su Kyi",
+      "specialty": "General Surgery",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {}
+    },
+    {
+      "id": "37",
+      "name": "Dr. Rubab Nafees",
+      "specialty": "General Surgery",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-09-30": {
+          "start_time": "11:00",
+          "room": "K104",
+          "patient_count": 35,
+          "before_break_opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "after_break_opd_patients": 25,
+          "opd": [
+            {
+              "range": "10:00-11:00",
+              "count": 10
+            },
+            {
+              "range": "13:00-14:00",
+              "count": 25
+            }
+          ],
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "status": "ON_DUTY",
+          "last_update": "2025-09-30T06:09:17.770397Z"
+        }
+      }
+    },
+    {
+      "id": "38",
+      "name": "Dr. Su Mon Kyaw",
+      "specialty": "General Surgery",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {}
+    },
+    {
+      "id": "39",
+      "name": "Dr. Moosa Manik",
+      "specialty": "Cardiology",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {},
+      "room": "4",
+      "opd": [
+        {
+          "range": "12:00-14:00"
+        }
+      ],
+      "breaks": [
+        "11:00-12:00"
+      ]
+    },
+    {
+      "id": "40",
+      "name": "Dr. Aya Gamal Kotb Mohamed Elagamy",
+      "specialty": "Dermatology",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {}
+    },
+    {
+      "id": "41",
+      "name": "Dr. Ahmed Fekry Bahyeldin Khalafallah",
+      "specialty": "Dermatology",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-10-18": {
+          "start_time": "15:00",
+          "room": "K102",
+          "patient_count": 20,
+          "before_break_opd": [
+            {
+              "range": "15:00-18:00",
+              "count": 10
+            }
+          ],
+          "before_break_opd_patients": 10,
+          "after_break_opd": [
+            {
+              "range": "19:00-20:00",
+              "count": 10
+            }
+          ],
+          "after_break_opd_patients": 10,
+          "opd": [
+            {
+              "range": "15:00-18:00",
+              "count": 10
+            },
+            {
+              "range": "19:00-20:00",
+              "count": 10
+            }
+          ],
+          "breaks": [
+            "18:00-19:00"
+          ],
+          "status": "SICK",
+          "last_update": "2025-10-18T10:49:12.193517Z",
+          "status_reason": "Sick Leave"
+        }
+      }
+    },
+    {
+      "id": "42",
+      "name": "Dr. Mohamed Wisham",
+      "specialty": "Endocrinology",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {}
+    },
+    {
+      "id": "43",
+      "name": "Dr. Vinod Ramlal",
+      "specialty": "Orthopaedics",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-11-03": {
+          "start_time": "8",
+          "status": "ON_DUTY",
+          "room": "K109",
+          "patient_count": 30,
+          "before_break_opd_patients": 15,
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "after_break_opd_patients": 15,
+          "last_update": "2025-11-02T20:48:47.717877Z"
+        }
+      }
+    },
+    {
+      "id": "44",
+      "name": "Dr. Dinesh Kumar Pandit",
+      "specialty": "Orthopaedics",
+      "keywords": [],
+      "start_time": "",
+      "status": "PENDING",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {
+        "2025-11-03": {
+          "start_time": "8",
+          "status": "ON_DUTY",
+          "room": "K108",
+          "patient_count": 30,
+          "before_break_opd_patients": 15,
+          "breaks": [
+            "11:00-12:00"
+          ],
+          "after_break_opd_patients": 15,
+          "last_update": "2025-11-02T20:48:47.716956Z"
+        }
+      }
+    },
+    {
+      "id": "14",
+      "name": "Dr. Sumretee",
+      "specialty": "Internal Medicine",
+      "keywords": [],
+      "start_time": "08:00",
+      "designation": "",
+      "notes": "",
+      "image_version": 1,
+      "schedule_by_date": {}
+    }
+  ]
+}

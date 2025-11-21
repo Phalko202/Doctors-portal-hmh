@@ -1,0 +1,138 @@
+{
+  "pr": {
+    "clinical": {
+      "regular": [
+        {
+          "id": "clinical-0",
+          "name": "Morning Shift",
+          "start": "08:00",
+          "end": "14:00",
+          "min_staff": 2,
+          "custom": false
+        },
+        {
+          "id": "clinical-1",
+          "name": "Evening Shift",
+          "start": "14:00",
+          "end": "20:00",
+          "min_staff": 2,
+          "custom": false
+        },
+        {
+          "id": "clinical-2",
+          "name": "Night Shift",
+          "start": "20:00",
+          "end": "08:00",
+          "min_staff": 2,
+          "custom": false
+        }
+      ],
+      "friday": [
+        {
+          "id": "fri-clinical-0",
+          "name": "Friday Morning",
+          "start": "07:30",
+          "end": "15:30",
+          "min_staff": 2,
+          "custom": false
+        },
+        {
+          "id": "fri-clinical-1",
+          "name": "Friday Evening",
+          "start": "15:30",
+          "end": "23:30",
+          "min_staff": 2,
+          "custom": false
+        },
+        {
+          "id": "fri-clinical-2",
+          "name": "Friday Night",
+          "start": "23:30",
+          "end": "19:30",
+          "min_staff": 1,
+          "custom": false
+        }
+      ]
+    },
+    "front": {
+      "regular": [
+        {
+          "id": "front-0",
+          "name": "Morning Shift",
+          "start": "08:00",
+          "end": "14:00",
+          "min_staff": 2,
+          "custom": false
+        },
+        {
+          "id": "front-1",
+          "name": "Evening Shift",
+          "start": "14:00",
+          "end": "20:00",
+          "min_staff": 2,
+          "custom": false
+        },
+        {
+          "id": "front-2",
+          "name": "Night Shift",
+          "start": "20:00",
+          "end": "08:00",
+          "min_staff": 2,
+          "custom": false
+        }
+      ],
+      "friday": [
+        {
+          "id": "fri-front-0",
+          "name": "Friday Morning",
+          "start": "07:30",
+          "end": "15:30",
+          "min_staff": 3,
+          "custom": false
+        },
+        {
+          "id": "fri-front-1",
+          "name": "Friday Evening",
+          "start": "15:30",
+          "end": "23:30",
+          "min_staff": 3,
+          "custom": false
+        },
+        {
+          "id": "fri-front-2",
+          "name": "Friday Night",
+          "start": "23:30",
+          "end": "19:30",
+          "min_staff": 3,
+          "custom": false
+        }
+      ]
+    }
+  },
+  "doctor_opd": {
+    "Internal Medicine": {
+      "evening": {
+        "after_break": null,
+        "before_break": null,
+        "break_time": null,
+        "end": null,
+        "informed_after_break": null,
+        "informed_before_break": null,
+        "start": null,
+        "total_appointments": null,
+        "walk_in_till": null
+      },
+      "morning": {
+        "after_break": null,
+        "before_break": 15,
+        "break_time": "NO BREAK",
+        "end": "15:00",
+        "informed_after_break": null,
+        "informed_before_break": "11:30",
+        "start": "09:30",
+        "total_appointments": 25,
+        "walk_in_till": null
+      }
+    }
+  }
+}

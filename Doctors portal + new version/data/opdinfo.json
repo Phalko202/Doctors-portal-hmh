@@ -1,0 +1,26 @@
+{
+  "Internal Medicine": {
+    "morning": {
+      "start": "09:30",
+      "end": "15:00",
+      "total_appointments": 25,
+      "before_break": 15,
+      "break_time": "NO BREAK",
+      "after_break": null,
+      "informed_before_break": "11:30",
+      "informed_after_break": null,
+      "walk_in_till": null
+    },
+    "evening": {
+      "start": null,
+      "end": null,
+      "total_appointments": null,
+      "before_break": null,
+      "break_time": null,
+      "after_break": null,
+      "informed_before_break": null,
+      "informed_after_break": null,
+      "walk_in_till": null
+    }
+  }
+}

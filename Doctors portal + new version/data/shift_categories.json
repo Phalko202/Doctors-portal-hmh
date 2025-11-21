@@ -1,0 +1,38 @@
+{
+  "clinical": {
+    "Morning OPD": [
+      {
+        "name": "Morning Shift",
+        "start": "08:30",
+        "end": "16:30",
+        "min_staff": 0
+      }
+    ],
+    "Evening OPD": [
+      {
+        "name": "Evening Shift",
+        "start": "14:00",
+        "end": "20:00",
+        "min_staff": 2
+      }
+    ],
+    "Night Duty": [
+      {
+        "name": "Night Shift",
+        "start": "20:00",
+        "end": "08:00",
+        "min_staff": 2
+      }
+    ]
+  },
+  "front": {
+    "Regular Hours": [
+      {
+        "name": "Day Shift",
+        "start": "08:00",
+        "end": "16:00",
+        "min_staff": 2
+      }
+    ]
+  }
+}

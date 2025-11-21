@@ -1,0 +1,375 @@
+{
+  "staff": [
+    {
+      "id": "1763234181841",
+      "name": "Faalih",
+      "roles": [
+        "clinical"
+      ],
+      "stations": [
+        "dermatology",
+        "endocrinology",
+        "ent",
+        "internal-medicine",
+        "nephrology",
+        "orthopaedics",
+        "paediatrics",
+        "pulmonology"
+      ],
+      "active": true,
+      "role": "clinical"
+    },
+    {
+      "id": "1763547359848",
+      "name": "Shaihaan",
+      "roles": [
+        "clinical",
+        "front"
+      ],
+      "stations": [
+        "dermatology",
+        "endocrinology",
+        "internal-medicine",
+        "nephrology",
+        "orthopaedics",
+        "paediatrics",
+        "pulmonology",
+        "1763279166216",
+        "triage-counter"
+      ],
+      "active": true,
+      "role": "clinical",
+      "created_at": "2025-11-19T15:15:59.848769"
+    }
+  ],
+  "stations": {
+    "clinical": [
+      {
+        "id": "cardiology",
+        "name": "Cardiology",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "Cardiology",
+        "allow_ai_assignment": true,
+        "auto_generated": true
+      },
+      {
+        "id": "dental",
+        "name": "Dental",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "Dental",
+        "allow_ai_assignment": false,
+        "auto_generated": true
+      },
+      {
+        "id": "dermatology",
+        "name": "Dermatology",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "Dermatology",
+        "allow_ai_assignment": true,
+        "auto_generated": true
+      },
+      {
+        "id": "endocrinology",
+        "name": "Endocrinology",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "Endocrinology",
+        "allow_ai_assignment": true,
+        "auto_generated": true
+      },
+      {
+        "id": "ent",
+        "name": "ENT",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "ENT",
+        "allow_ai_assignment": true,
+        "auto_generated": true
+      },
+      {
+        "id": "general-surgery",
+        "name": "General Surgery",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "General Surgery",
+        "allow_ai_assignment": true,
+        "auto_generated": true
+      },
+      {
+        "id": "gynaecology",
+        "name": "Gynaecology",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "Gynaecology",
+        "allow_ai_assignment": true,
+        "auto_generated": true
+      },
+      {
+        "id": "internal-medicine",
+        "name": "Internal Medicine",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "Internal Medicine",
+        "allow_ai_assignment": true,
+        "auto_generated": true
+      },
+      {
+        "id": "nephrology",
+        "name": "Nephrology",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "Nephrology",
+        "allow_ai_assignment": true,
+        "auto_generated": true
+      },
+      {
+        "id": "ophthalmology",
+        "name": "Ophthalmology",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "Ophthalmology",
+        "allow_ai_assignment": false,
+        "auto_generated": true
+      },
+      {
+        "id": "oral-maxillo-facial-surgery-oms",
+        "name": "Oral Maxillo facial surgery (OMS)",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "Oral Maxillo facial surgery (OMS)",
+        "allow_ai_assignment": true,
+        "auto_generated": true
+      },
+      {
+        "id": "orthopaedics",
+        "name": "Orthopaedics",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "Orthopaedics",
+        "allow_ai_assignment": true,
+        "auto_generated": true
+      },
+      {
+        "id": "paediatrics",
+        "name": "Paediatrics",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "Paediatrics",
+        "allow_ai_assignment": true,
+        "auto_generated": true
+      },
+      {
+        "id": "psychiatry",
+        "name": "Psychiatry",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "Psychiatry",
+        "allow_ai_assignment": false,
+        "auto_generated": true
+      },
+      {
+        "id": "pulmonology",
+        "name": "Pulmonology",
+        "type": "clinical",
+        "color": "#10b981",
+        "source": "specialty",
+        "specialty": "Pulmonology",
+        "allow_ai_assignment": true,
+        "auto_generated": true
+      }
+    ],
+    "front": [
+      {
+        "id": "1763279166216",
+        "name": "Front desk",
+        "type": "front",
+        "color": "#10b981",
+        "source": "custom",
+        "auto_generated": false
+      },
+      {
+        "id": "triage-counter",
+        "name": "Triage counter",
+        "type": "front",
+        "color": "#0ea5e9",
+        "source": "custom",
+        "auto_generated": false
+      }
+    ]
+  },
+  "leave_types": {
+    "AL": {
+      "name": "Annual Leave",
+      "color": "#90EE90"
+    },
+    "FRL": {
+      "name": "Family Leave",
+      "color": "#FFB6C1"
+    },
+    "EXC": {
+      "name": "Exam Leave",
+      "color": "#FF6347"
+    },
+    "HI": {
+      "name": "Home Isolation",
+      "color": "#FF0000"
+    },
+    "OR": {
+      "name": "Official Request",
+      "color": "#FFA500"
+    },
+    "SWP": {
+      "name": "Swap",
+      "color": "#87CEEB"
+    },
+    "SWPL": {
+      "name": "Swap Leave",
+      "color": "#4682B4"
+    },
+    "NP": {
+      "name": "No Pay",
+      "color": "#DDA0DD"
+    },
+    "CL": {
+      "name": "Casual Leave",
+      "color": "#98FB98"
+    },
+    "AB": {
+      "name": "Absent",
+      "color": "#FF69B4"
+    },
+    "SL": {
+      "name": "Sick Leave",
+      "color": "#FFD700"
+    },
+    "ML": {
+      "name": "Medical Leave",
+      "color": "#FFA07A"
+    },
+    "OC": {
+      "name": "On Call",
+      "color": "#DA70D6"
+    },
+    "AC": {
+      "name": "Additional Coverage",
+      "color": "#40E0D0"
+    },
+    "PML": {
+      "name": "Paternity/Maternity Leave",
+      "color": "#FFC0CB"
+    }
+  },
+  "shift_templates": {
+    "clinical": {
+      "Evening Shifts": [
+        {
+          "end": "22:30",
+          "name": "Clinical Shift",
+          "start": "14:30"
+        }
+      ],
+      "Morning Shifts": [
+        {
+          "end": "15:30",
+          "name": "",
+          "start": "07:30"
+        },
+        {
+          "end": "16:30",
+          "name": "Clinical Shift",
+          "start": "08:30"
+        },
+        {
+          "end": "17:30",
+          "name": "Clinical Shift",
+          "start": "09:30"
+        },
+        {
+          "end": "18:30",
+          "name": "Clinical Shift",
+          "start": "10:30"
+        }
+      ],
+      "Night Shifts": [
+        {
+          "end": "07:30",
+          "name": "Clinical Shift",
+          "start": "23:30"
+        }
+      ]
+    },
+    "front": {
+      "Evening Shifts": [
+        {
+          "end": "23:30",
+          "name": "Front Desk Shift",
+          "staffCount": 1,
+          "start": "15:30",
+          "station": "1763279166216"
+        },
+        {
+          "end": "23:30",
+          "name": "Triage counter shift ",
+          "staffCount": 1,
+          "start": "15:30",
+          "station": "triage-counter"
+        }
+      ],
+      "Morning Shifts": [
+        {
+          "end": "15:30",
+          "name": "Front Desk Shift",
+          "staffCount": 1,
+          "start": "07:30",
+          "station": "1763279166216"
+        }
+      ],
+      "Night Shifts": [
+        {
+          "name": "Triage counter shift",
+          "start": "23:30",
+          "end": "07:30",
+          "staffCount": 2,
+          "station": "triage-counter"
+        },
+        {
+          "name": "GP clinic",
+          "start": "23:30",
+          "end": "07:30",
+          "staffCount": 2
+        }
+      ]
+    }
+  },
+  "ai_rules": {
+    "minWeeklyOffs": 2,
+    "maxConsecutiveDays": 5,
+    "allowEDAssignment": true,
+    "maxEDPerWeek": 1,
+    "noRepeatedED": true,
+    "noEDAfterOff": false,
+    "noEDOnFriday": false,
+    "staffStartOffset": 30,
+    "minBreakHours": 12,
+    "enableOnCallAdjust": true,
+    "balanceWorkload": true,
+    "respectPreferences": true
+  }
+}
